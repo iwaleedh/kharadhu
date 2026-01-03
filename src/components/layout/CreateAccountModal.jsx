@@ -13,13 +13,13 @@ export const CreateAccountModal = ({ isOpen, onClose, onCreate, loading, error }
     <Modal isOpen={isOpen} onClose={onClose} title="Create account" size="sm">
       <div className="space-y-3">
         {error ? (
-          <div className="text-sm text-coral-600 bg-coral-50 border border-coral-200 p-2 rounded">
+          <div className="text-sm text-red-600 bg-coral-50 border border-coral-200 p-2 rounded">
             {error}
           </div>
         ) : null}
 
         <div>
-          <label className="text-sm text-gray-300">Name</label>
+          <label className="text-sm text-gray-800">Name</label>
           <Input
             placeholder="e.g., Ibrahim"
             value={name}
@@ -28,7 +28,7 @@ export const CreateAccountModal = ({ isOpen, onClose, onCreate, loading, error }
         </div>
 
         <div>
-          <label className="text-sm text-gray-300">PIN</label>
+          <label className="text-sm text-gray-800">PIN</label>
           <Input
             type="password"
             inputMode="numeric"

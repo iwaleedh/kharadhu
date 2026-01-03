@@ -12,13 +12,13 @@ export const RenameAccountModal = ({ isOpen, onClose, initialName, onRename, loa
     <Modal isOpen={isOpen} onClose={onClose} title="Rename account" size="sm">
       <div className="space-y-3">
         {error ? (
-          <div className="text-sm text-coral-600 bg-coral-50 border border-coral-200 p-2 rounded">
+          <div className="text-sm text-red-600 bg-coral-50 border border-coral-200 p-2 rounded">
             {error}
           </div>
         ) : null}
 
         <div>
-          <label className="text-sm text-gray-300">New name</label>
+          <label className="text-sm text-gray-800">New name</label>
           <Input value={name} onChange={(e) => setName(e.target.value)} />
         </div>
 

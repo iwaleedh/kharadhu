@@ -89,7 +89,7 @@ export const SMSBatchImport = ({ text, onCancel, onImportMany }) => {
   return (
     <div className="space-y-3">
       {error ? (
-        <div className="text-sm text-red-400 bg-red-950/30 border border-red-900/50 p-3 rounded-lg">{error}</div>
+        <div className="text-sm text-red-900 bg-red-950/30 border border-red-200/50 p-3 rounded-lg">{error}</div>
       ) : null}
 
       <Card>
@@ -101,27 +101,27 @@ export const SMSBatchImport = ({ text, onCancel, onImportMany }) => {
             {items.map((item) => (
               <div
                 key={item.id}
-                className={`p-3 rounded-lg border ${item.ok ? 'border-gray-800 bg-black/30' : 'border-red-900/40 bg-red-950/20'}`}
+                className={`p-3 rounded-lg border ${item.ok ? 'border-gray-200 bg-white' : 'border-red-200/40 bg-red-950/20'}`}
               >
                 <div className="flex items-start justify-between gap-3">
                   <div className="min-w-0">
                     <div className="flex items-center gap-2">
                       {item.ok ? (
-                        <CheckCircle size={16} className="text-green-400" />
+                        <CheckCircle size={16} className="text-emerald-500" />
                       ) : (
-                        <AlertCircle size={16} className="text-red-400" />
+                        <AlertCircle size={16} className="text-red-900" />
                       )}
-                      <div className="text-sm font-semibold text-gray-100 truncate">
+                      <div className="text-sm font-semibold text-gray-900 truncate">
                         {item.ok ? `${item.parsed.bank} • ${item.parsed.type === 'credit' ? 'Income' : 'Expense'} • MVR ${item.parsed.amount}` : 'Unrecognized SMS'}
                       </div>
                     </div>
-                    <div className="text-xs text-gray-400 mt-1 truncate">
+                    <div className="text-xs text-gray-700 mt-1 truncate">
                       {item.ok ? (item.parsed.merchant || item.parsed.description || '—') : item.err}
                     </div>
                   </div>
 
                   {item.ok ? (
-                    <label className="flex items-center gap-2 text-xs text-gray-300">
+                    <label className="flex items-center gap-2 text-xs text-gray-800">
                       <input
                         type="checkbox"
                         checked={item.selected}
@@ -133,8 +133,8 @@ export const SMSBatchImport = ({ text, onCancel, onImportMany }) => {
                 </div>
 
                 <details className="mt-2">
-                  <summary className="text-xs text-gray-500 cursor-pointer">Show SMS</summary>
-                  <div className="mt-2 text-xs text-gray-300 whitespace-pre-wrap">{item.raw}</div>
+                  <summary className="text-xs text-gray-700 cursor-pointer">Show SMS</summary>
+                  <div className="mt-2 text-xs text-gray-800 whitespace-pre-wrap">{item.raw}</div>
                 </details>
               </div>
             ))}

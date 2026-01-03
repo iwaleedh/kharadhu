@@ -100,10 +100,8 @@ export const Transactions = () => {
       />
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-bold text-gray-900">
-            <span className="dhivehi">ހަރަދު</span> <span className="text-sm text-gray-600">Transactions</span>
-          </h2>
-          <p className="text-xs text-gray-600">{transactions.length} <span className="dhivehi">ޖުމްލަ</span></p>
+          <h2 className="text-lg font-bold text-gray-900">Transactions</h2>
+          <p className="text-xs text-gray-800">{transactions.length} total</p>
         </div>
         <Button
           variant="outline"

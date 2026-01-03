@@ -90,19 +90,10 @@
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
   }
   
-  /* Dark theme (default) */
-  .theme-dark body {
-    background: linear-gradient(135deg, #0a0a0a 0%, #1a1a1a 100%);
-    @apply text-gray-100 antialiased;
-  }
-  
-  /* Light theme */
-  .theme-light body {
-    background: linear-gradient(135deg, #ffffff 0%, #f5f5f5 100%);
-    @apply text-gray-900 antialiased;
-  }
-  
+  /* Mint-inspired light theme with warm tones */
   body {
+    background: linear-gradient(135deg, #fafaf9 0%, #fef3f2 100%);
+    @apply text-gray-900 antialiased;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     touch-action: manipulation;
@@ -110,18 +101,14 @@
     min-height: 100vh;
   }
   
-  .dhivehi,
-  .dhivehi *,
-  [lang="dv"],
-  [lang="dv"] * {
-    font-family: 'Faruma', 'MV Waheed', 'MV Faseyha', sans-serif !important;
-    font-feature-settings: "liga" 1, "kern" 1;
+  .theme-dark body {
+    background: linear-gradient(135deg, #fafaf9 0%, #fef3f2 100%);
+    @apply text-gray-900 antialiased;
   }
-
-  .dhivehi,
-  [lang="dv"] {
-    direction: rtl;
-    text-align: right;
+  
+  .theme-light body {
+    background: linear-gradient(135deg, #ffffff 0%, #fef8f5 100%);
+    @apply text-gray-900 antialiased;
   }
   
   input, textarea, select, button {

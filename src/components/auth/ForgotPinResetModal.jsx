@@ -43,19 +43,19 @@ export const ForgotPinResetModal = ({
 
       <Modal isOpen={isOpen} onClose={onClose} title="Forgot PIN" size="sm">
       <div className="space-y-3">
-        <p className="text-sm text-gray-300">
-          Account: <span className="font-semibold text-white">{accountName || '—'}</span>
+        <p className="text-sm text-gray-800">
+          Account: <span className="font-semibold text-gray-900">{accountName || '—'}</span>
         </p>
 
         {error ? (
-          <div className="text-sm text-coral-600 bg-coral-50 border border-coral-200 p-2 rounded">
+          <div className="text-sm text-red-600 bg-coral-50 border border-coral-200 p-2 rounded">
             {error}
           </div>
         ) : null}
 
-        <div className="rounded-lg border border-gray-800 p-3 bg-black/40">
-          <div className="text-sm font-semibold text-white mb-2">Option A: Reset PIN (keeps data)</div>
-          <label className="text-sm text-gray-300">New PIN</label>
+        <div className="rounded-lg border border-gray-200 p-3 bg-blue-50">
+          <div className="text-sm font-semibold text-gray-900 mb-2">Option A: Reset PIN (keeps data)</div>
+          <label className="text-sm text-gray-800">New PIN</label>
           <Input
             type="password"
             inputMode="numeric"
@@ -76,13 +76,13 @@ export const ForgotPinResetModal = ({
           >
             {loading ? 'Working…' : 'Reset PIN'}
           </Button>
-          <p className="text-xs text-gray-500 mt-2">
+          <p className="text-xs text-gray-700 mt-2">
             This is less secure: anyone with device access can take over the account.
           </p>
         </div>
 
-        <div className="rounded-lg border border-red-900/30 p-3 bg-red-950/20">
-          <div className="text-sm font-semibold text-white mb-2">Option B: Delete account (wipes data)</div>
+        <div className="rounded-lg border border-red-200/30 p-3 bg-red-950/20">
+          <div className="text-sm font-semibold text-gray-900 mb-2">Option B: Delete account (wipes data)</div>
           <Button
             variant="danger"
             className="w-full"

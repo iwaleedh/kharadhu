@@ -128,20 +128,20 @@ export const AccountSwitcher = () => {
       <div className="relative">
       <button
         onClick={() => setOpen((v) => !v)}
-        className="flex items-center space-x-2 px-3 py-2 rounded-lg border border-red-900/30 bg-black/30 text-gray-200 hover:bg-black/40"
+        className="flex items-center space-x-2 px-3 py-2 rounded-lg border border-red-200/30 bg-white text-gray-700 hover:bg-blue-50"
         aria-haspopup="menu"
         aria-expanded={open}
       >
         <span className="text-sm font-semibold max-w-[120px] truncate">{label}</span>
-        <ChevronDown size={16} className="text-gray-300" />
+        <ChevronDown size={16} className="text-gray-800" />
       </button>
 
       {open ? (
         <div
-          className="absolute right-0 mt-2 w-56 rounded-xl border border-red-900/30 bg-black/95 shadow-2xl overflow-hidden"
+          className="absolute right-0 mt-2 w-56 rounded-xl border border-red-200/30 bg-white/95 shadow-2xl overflow-hidden"
           role="menu"
         >
-          <div className="px-3 py-2 text-xs text-gray-400 border-b border-red-900/20">
+          <div className="px-3 py-2 text-xs text-gray-700 border-b border-red-200/20">
             Switch account
           </div>
 
@@ -150,7 +150,7 @@ export const AccountSwitcher = () => {
               <button
                 key={u.id}
                 className={`w-full text-left px-3 py-2 text-sm hover:bg-white/5 ${
-                  currentUser?.id === u.id ? 'bg-white/5 text-white' : 'text-gray-200'
+                  currentUser?.id === u.id ? 'bg-white/5 text-white' : 'text-gray-700'
                 }`}
                 onClick={async () => {
                   const settings = getSecuritySettings();
@@ -169,9 +169,9 @@ export const AccountSwitcher = () => {
             ))}
           </div>
 
-          <div className="border-t border-red-900/20">
+          <div className="border-t border-red-200/20">
             <button
-              className="w-full px-3 py-2 text-left text-sm text-gray-200 hover:bg-white/5"
+              className="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-white/5"
               onClick={() => setShowRename(true)}
               role="menuitem"
             >
@@ -179,7 +179,7 @@ export const AccountSwitcher = () => {
             </button>
 
             <button
-              className="w-full px-3 py-2 text-left text-sm text-gray-200 hover:bg-white/5"
+              className="w-full px-3 py-2 text-left text-sm text-gray-700 hover:bg-white/5"
               onClick={() => setShowChangePin(true)}
               role="menuitem"
             >
@@ -187,7 +187,7 @@ export const AccountSwitcher = () => {
             </button>
 
             <button
-              className="w-full flex items-center space-x-2 px-3 py-2 text-sm text-gray-200 hover:bg-white/5"
+              className="w-full flex items-center space-x-2 px-3 py-2 text-sm text-gray-700 hover:bg-white/5"
               onClick={() => setShowForgot(true)}
               role="menuitem"
             >
@@ -196,7 +196,7 @@ export const AccountSwitcher = () => {
             </button>
 
             <button
-              className="w-full px-3 py-2 text-left text-sm text-coral-400 hover:bg-white/5"
+              className="w-full px-3 py-2 text-left text-sm text-red-400 hover:bg-white/5"
               onClick={() => setConfirmDelete(true)}
               role="menuitem"
             >
@@ -204,7 +204,7 @@ export const AccountSwitcher = () => {
             </button>
 
             <button
-              className="w-full flex items-center space-x-2 px-3 py-2 text-sm text-gray-200 hover:bg-white/5"
+              className="w-full flex items-center space-x-2 px-3 py-2 text-sm text-gray-700 hover:bg-white/5"
               onClick={() => {
                 // Sign-out returns to Auth screen.
                 signOut();
@@ -217,7 +217,7 @@ export const AccountSwitcher = () => {
             </button>
 
             <button
-              className="w-full flex items-center space-x-2 px-3 py-2 text-sm text-gray-200 hover:bg-white/5"
+              className="w-full flex items-center space-x-2 px-3 py-2 text-sm text-gray-700 hover:bg-white/5"
               onClick={() => {
                 setShowCreate(true);
               }}

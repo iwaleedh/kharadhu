@@ -37,10 +37,7 @@ export const CategoryManager = () => {
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle>
-              <span className="dhivehi">ބައިތައް</span>
-              <span className="text-sm text-gray-400 ml-2">Categories</span>
-            </CardTitle>
+            <CardTitle>Categories</CardTitle>
             <Button
               size="sm"
               onClick={() => setShowAddModal(true)}
@@ -54,25 +51,27 @@ export const CategoryManager = () => {
         <CardContent>
           {/* Expense Categories */}
           <div className="mb-6">
-            <h3 className="text-sm font-semibold text-gray-300 mb-3">
+            <h3 className="text-sm font-semibold text-gray-800 mb-3">
               Expenses ({expenseCategories.length})
             </h3>
             <div className="grid grid-cols-2 gap-2">
               {expenseCategories.map((category) => (
                 <div
                   key={category.id}
-                  className="bg-black/30 border border-gray-800 rounded-lg p-3 hover:bg-black/40 transition-all"
+                  className="bg-white border border-gray-200 rounded-lg p-3 hover:bg-blue-50 transition-all"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2 flex-1">
                       <span className="text-2xl">{category.icon}</span>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold text-white truncate">
+                        <p className="text-sm font-semibold text-gray-900 truncate">
                           {category.name}
                         </p>
-                        <p className="text-xs text-gray-400 dhivehi truncate">
-                          {category.nameDv}
-                        </p>
+                        {category.nameDv && (
+                          <p className="text-xs text-gray-700 truncate">
+                            {category.nameDv}
+                          </p>
+                        )}
                       </div>
                     </div>
                     <div className="flex items-center space-x-1 ml-2">
@@ -80,13 +79,13 @@ export const CategoryManager = () => {
                         onClick={() => setEditingCategory(category)}
                         className="p-1 hover:bg-gray-700 rounded transition-colors"
                       >
-                        <Edit2 size={14} className="text-gray-400" />
+                        <Edit2 size={14} className="text-gray-700" />
                       </button>
                       <button
                         onClick={() => setDeletingCategory(category)}
                         className="p-1 hover:bg-red-900/50 rounded transition-colors"
                       >
-                        <Trash2 size={14} className="text-red-400" />
+                        <Trash2 size={14} className="text-red-900" />
                       </button>
                     </div>
                   </div>
@@ -97,25 +96,27 @@ export const CategoryManager = () => {
 
           {/* Income Categories */}
           <div>
-            <h3 className="text-sm font-semibold text-gray-300 mb-3">
+            <h3 className="text-sm font-semibold text-gray-800 mb-3">
               Income ({incomeCategories.length})
             </h3>
             <div className="grid grid-cols-2 gap-2">
               {incomeCategories.map((category) => (
                 <div
                   key={category.id}
-                  className="bg-black/30 border border-gray-800 rounded-lg p-3 hover:bg-black/40 transition-all"
+                  className="bg-white border border-gray-200 rounded-lg p-3 hover:bg-blue-50 transition-all"
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center space-x-2 flex-1">
                       <span className="text-2xl">{category.icon}</span>
                       <div className="flex-1 min-w-0">
-                        <p className="text-sm font-semibold text-white truncate">
+                        <p className="text-sm font-semibold text-gray-900 truncate">
                           {category.name}
                         </p>
-                        <p className="text-xs text-gray-400 dhivehi truncate">
-                          {category.nameDv}
-                        </p>
+                        {category.nameDv && (
+                          <p className="text-xs text-gray-700 truncate">
+                            {category.nameDv}
+                          </p>
+                        )}
                       </div>
                     </div>
                     <div className="flex items-center space-x-1 ml-2">
@@ -123,13 +124,13 @@ export const CategoryManager = () => {
                         onClick={() => setEditingCategory(category)}
                         className="p-1 hover:bg-gray-700 rounded transition-colors"
                       >
-                        <Edit2 size={14} className="text-gray-400" />
+                        <Edit2 size={14} className="text-gray-700" />
                       </button>
                       <button
                         onClick={() => setDeletingCategory(category)}
                         className="p-1 hover:bg-red-900/50 rounded transition-colors"
                       >
-                        <Trash2 size={14} className="text-red-400" />
+                        <Trash2 size={14} className="text-red-900" />
                       </button>
                     </div>
                   </div>

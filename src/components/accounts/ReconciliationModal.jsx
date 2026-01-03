@@ -73,12 +73,12 @@ export const ReconciliationModal = ({ isOpen, account, onClose, onAdjusted }) =>
     <Modal isOpen={isOpen} onClose={onClose} title={account ? `Reconcile ${account.nickname}` : 'Reconcile Balance'}>
       <div className="space-y-3">
         {error && (
-          <div className="text-sm text-red-400 bg-red-950/30 border border-red-900/50 p-3 rounded-lg">{error}</div>
+          <div className="text-sm text-red-900 bg-red-950/30 border border-red-200/50 p-3 rounded-lg">{error}</div>
         )}
         <div className="grid grid-cols-2 gap-2">
           <div>
-            <p className="text-xs text-gray-400">Calculated</p>
-            <p className="text-lg font-bold text-white">MVR {calculated.toFixed(2)}</p>
+            <p className="text-xs text-gray-700">Calculated</p>
+            <p className="text-lg font-bold text-gray-900">MVR {calculated.toFixed(2)}</p>
           </div>
           <div>
             <Input
@@ -91,12 +91,12 @@ export const ReconciliationModal = ({ isOpen, account, onClose, onAdjusted }) =>
             />
           </div>
         </div>
-        <div className="bg-gray-900/50 rounded-lg p-3 border border-gray-800">
-          <p className="text-sm text-gray-300">Difference: <span className={recon.difference > 0 ? 'text-green-400' : recon.difference < 0 ? 'text-red-400' : 'text-gray-400'}>{recon.difference.toFixed(2)}</span></p>
+        <div className="bg-white/50 rounded-lg p-3 border border-gray-200">
+          <p className="text-sm text-gray-800">Difference: <span className={recon.difference > 0 ? 'text-emerald-500' : recon.difference < 0 ? 'text-red-900' : 'text-gray-700'}>{recon.difference.toFixed(2)}</span></p>
           {recon.needsAdjustment ? (
-            <p className="text-xs text-gray-500 mt-1">This will create a {recon.adjustmentType === 'credit' ? 'credit (income)' : 'debit (expense)'} adjustment of MVR {recon.adjustmentAmount.toFixed(2)}.</p>
+            <p className="text-xs text-gray-700 mt-1">This will create a {recon.adjustmentType === 'credit' ? 'credit (income)' : 'debit (expense)'} adjustment of MVR {recon.adjustmentAmount.toFixed(2)}.</p>
           ) : (
-            <p className="text-xs text-gray-500 mt-1">No adjustment needed.</p>
+            <p className="text-xs text-gray-700 mt-1">No adjustment needed.</p>
           )}
         </div>
         <div className="flex space-x-2">

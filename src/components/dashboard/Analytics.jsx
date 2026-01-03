@@ -71,28 +71,24 @@ export const Analytics = ({ transactions = [], categories = [] }) => {
     <div className="space-y-3">
       {/* Header */}
       <div>
-        <h2 className="text-xl font-bold text-gray-100 flex items-center space-x-2">
+        <h2 className="text-xl font-bold text-gray-900 flex items-center space-x-2">
           <PieChartIcon size={24} className="text-red-500" />
-          <span className="dhivehi">އެނަލިޓިކްސް</span>
-          <span className="text-base text-gray-300">Analytics</span>
+          <span>Analytics</span>
         </h2>
-        <p className="text-sm text-gray-400">
-          <span className="dhivehi">ހަރަދާއި އާމްދަނީގެ ތަފްސީލް</span>
-        </p>
+        <p className="text-sm text-gray-700">Expense & Income Breakdown</p>
       </div>
 
       {/* Expense Breakdown */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
-            <TrendingDown size={20} className="text-red-400" />
+            <TrendingDown size={20} style={{ color: '#880808' }} />
             <span>Expense Breakdown</span>
-            <span className="text-sm text-gray-400 dhivehi">ހަރަދުގެ ތަފްސީލް</span>
           </CardTitle>
         </CardHeader>
         <CardContent>
           {expenseGroups.length === 0 ? (
-            <p className="text-sm text-gray-400 text-center py-4">No expenses yet</p>
+            <p className="text-sm text-gray-700 text-center py-4">No expenses yet</p>
           ) : (
             <div className="space-y-2">
               {expenseGroups.map((group) => {
@@ -100,32 +96,32 @@ export const Analytics = ({ transactions = [], categories = [] }) => {
                 const isOpen = expandedExpenseCategory === group.category;
 
                 return (
-                  <div key={group.category} className="bg-black/30 rounded-lg border border-gray-800 overflow-hidden">
+                  <div key={group.category} className="bg-white rounded-lg border border-gray-200 overflow-hidden">
                     <button
                       type="button"
                       onClick={() => setExpandedExpenseCategory(isOpen ? null : group.category)}
-                      className="w-full p-3 text-left hover:bg-black/40 transition-all"
+                      className="w-full p-3 text-left hover:bg-blue-50 transition-all"
                     >
                       <div className="flex items-center justify-between">
                         <div className="flex items-center space-x-2">
                           <span className="text-2xl">{getCategoryIcon(group.category)}</span>
                           <div>
-                            <p className="font-semibold text-white flex items-center space-x-2">
+                            <p className="font-semibold text-gray-900 flex items-center space-x-2">
                               <span>{group.category}</span>
-                              <span className="text-xs text-gray-400">({group.count})</span>
+                              <span className="text-xs text-gray-700">({group.count})</span>
                             </p>
-                            <p className="text-xs text-gray-400">
+                            <p className="text-xs text-gray-700">
                               {formatCurrency(group.total)} • {percentage.toFixed(1)}%
                             </p>
                           </div>
                         </div>
 
                         <div className="flex items-center space-x-2">
-                          <span className="text-red-400 font-bold">{formatCurrency(group.total)}</span>
+                          <span className="font-bold" style={{ color: '#880808' }}>{formatCurrency(group.total)}</span>
                           {isOpen ? (
-                            <ChevronDown size={18} className="text-gray-400" />
+                            <ChevronDown size={18} className="text-gray-700" />
                           ) : (
-                            <ChevronRight size={18} className="text-gray-400" />
+                            <ChevronRight size={18} className="text-gray-700" />
                           )}
                         </div>
                       </div>
@@ -141,34 +137,34 @@ export const Analytics = ({ transactions = [], categories = [] }) => {
                     {/* Collapsible details */}
                     {isOpen && (
                       <div className="px-3 pb-3">
-                        <div className="mt-2 border-t border-gray-800 pt-2 space-y-2">
+                        <div className="mt-2 border-t border-gray-200 pt-2 space-y-2">
                           {group.transactions.slice(0, 20).map((t) => (
                             <div
                               key={t.id}
-                              className="flex items-start justify-between bg-black/30 border border-gray-800 rounded-lg p-2"
+                              className="flex items-start justify-between bg-white border border-gray-200 rounded-lg p-2"
                             >
                               <div className="min-w-0">
-                                <p className="text-sm text-gray-100 font-semibold truncate">
+                                <p className="text-sm text-gray-900 font-semibold truncate">
                                   {t.merchant || 'Expense'}
                                 </p>
-                                <p className="text-xs text-gray-400 truncate">
+                                <p className="text-xs text-gray-700 truncate">
                                   {formatDate(t.date, 'dd MMM HH:mm')} • {t.bank}{t.accountNumber ? ` • ****${t.accountNumber}` : ''}
                                 </p>
                                 {t.description ? (
-                                  <p className="text-xs text-gray-500 mt-1 truncate">{t.description}</p>
+                                  <p className="text-xs text-gray-700 mt-1 truncate">{t.description}</p>
                                 ) : null}
                                 {t.referenceNumber ? (
-                                  <p className="text-xs text-gray-500 mt-1 truncate">Ref: {t.referenceNumber}</p>
+                                  <p className="text-xs text-gray-700 mt-1 truncate">Ref: {t.referenceNumber}</p>
                                 ) : null}
                               </div>
                               <div className="ml-3 text-right flex-shrink-0">
-                                <p className="text-sm font-bold text-red-400">-{formatCurrency(t.amount)}</p>
+                                <p className="text-sm font-bold" style={{ color: '#880808' }}>-{formatCurrency(t.amount)}</p>
                               </div>
                             </div>
                           ))}
 
                           {group.transactions.length > 20 && (
-                            <p className="text-xs text-gray-500 text-center">
+                            <p className="text-xs text-gray-700 text-center">
                               Showing latest 20 of {group.transactions.length} transactions
                             </p>
                           )}
@@ -179,10 +175,10 @@ export const Analytics = ({ transactions = [], categories = [] }) => {
                 );
               })}
 
-              <div className="bg-gradient-to-br from-red-950/30 to-red-900/20 border border-red-900/50 rounded-lg p-3 mt-3">
+              <div className="bg-gradient-to-br from-red-50/30 to-red-100/20 border border-red-200/50 rounded-lg p-3 mt-3">
                 <div className="flex items-center justify-between">
-                  <p className="font-semibold text-white">Total Expenses</p>
-                  <p className="text-xl font-bold text-red-400">{formatCurrency(totalExpenses)}</p>
+                  <p className="font-semibold text-gray-900">Total Expenses</p>
+                  <p className="text-xl font-bold" style={{ color: '#880808' }}>{formatCurrency(totalExpenses)}</p>
                 </div>
               </div>
             </div>
@@ -194,31 +190,30 @@ export const Analytics = ({ transactions = [], categories = [] }) => {
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
-            <TrendingUp size={20} className="text-green-400" />
+            <TrendingUp size={20} className="text-emerald-500" />
             <span>Income Breakdown</span>
-            <span className="text-sm text-gray-400 dhivehi">އާމްދަނީގެ ތަފްސީލް</span>
           </CardTitle>
         </CardHeader>
         <CardContent>
           {incomeGroups.length === 0 ? (
-            <p className="text-sm text-gray-400 text-center py-4">No income yet</p>
+            <p className="text-sm text-gray-700 text-center py-4">No income yet</p>
           ) : (
             <div className="space-y-2">
               {incomeGroups.map((item) => {
                 const percentage = totalIncome > 0 ? (item.total / totalIncome) * 100 : 0;
                 return (
-                  <div key={item.category} className="bg-black/30 rounded-lg p-3 border border-gray-800">
+                  <div key={item.category} className="bg-white rounded-lg p-3 border border-gray-200">
                     <div className="flex items-center justify-between mb-2">
                       <div className="flex items-center space-x-2">
                         <span className="text-2xl">{getCategoryIcon(item.category)}</span>
                         <div>
-                          <p className="font-semibold text-white">{item.category}</p>
-                          <p className="text-xs text-gray-400">{item.count} transactions</p>
+                          <p className="font-semibold text-gray-900">{item.category}</p>
+                          <p className="text-xs text-gray-700">{item.count} transactions</p>
                         </div>
                       </div>
                       <div className="text-right">
-                        <p className="text-lg font-bold text-green-400">{formatCurrency(item.total)}</p>
-                        <p className="text-xs text-gray-400">{percentage.toFixed(1)}%</p>
+                        <p className="text-lg font-bold text-emerald-500">{formatCurrency(item.total)}</p>
+                        <p className="text-xs text-gray-700">{percentage.toFixed(1)}%</p>
                       </div>
                     </div>
                     <div className="w-full bg-gray-800 rounded-full h-2">
@@ -233,8 +228,8 @@ export const Analytics = ({ transactions = [], categories = [] }) => {
 
               <div className="bg-gradient-to-br from-green-950/30 to-green-900/20 border border-green-900/50 rounded-lg p-3 mt-3">
                 <div className="flex items-center justify-between">
-                  <p className="font-semibold text-white">Total Income</p>
-                  <p className="text-xl font-bold text-green-400">{formatCurrency(totalIncome)}</p>
+                  <p className="font-semibold text-gray-900">Total Income</p>
+                  <p className="text-xl font-bold text-emerald-500">{formatCurrency(totalIncome)}</p>
                 </div>
               </div>
             </div>

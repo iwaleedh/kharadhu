@@ -71,20 +71,20 @@ export const EditAccountModal = ({ isOpen, onClose, account, onSuccess }) => {
     <Modal isOpen={isOpen} onClose={onClose} title="Edit Account">
       <form onSubmit={handleSubmit} className="space-y-4">
         {error && (
-          <div className="text-sm text-red-400 bg-red-950/30 border border-red-900/50 p-3 rounded-lg">
+          <div className="text-sm text-red-900 bg-red-950/30 border border-red-200/50 p-3 rounded-lg">
             {error}
           </div>
         )}
 
         {/* Bank Selection */}
         <div>
-          <label className="text-sm font-semibold text-gray-300 mb-2 block">
+          <label className="text-sm font-semibold text-gray-800 mb-2 block">
             Bank
           </label>
           <select
             value={formData.bankName}
             onChange={(e) => setFormData({ ...formData, bankName: e.target.value })}
-            className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-lg text-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+            className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
             required
           >
             <option value="">Select a bank</option>
@@ -98,7 +98,7 @@ export const EditAccountModal = ({ isOpen, onClose, account, onSuccess }) => {
 
         {/* Account Number */}
         <div>
-          <label className="text-sm font-semibold text-gray-300 mb-2 block">
+          <label className="text-sm font-semibold text-gray-800 mb-2 block">
             Account Number (Last 4 digits)
           </label>
           <Input
@@ -113,7 +113,7 @@ export const EditAccountModal = ({ isOpen, onClose, account, onSuccess }) => {
 
         {/* Nickname */}
         <div>
-          <label className="text-sm font-semibold text-gray-300 mb-2 block">
+          <label className="text-sm font-semibold text-gray-800 mb-2 block">
             Account Nickname
           </label>
           <Input
@@ -132,20 +132,20 @@ export const EditAccountModal = ({ isOpen, onClose, account, onSuccess }) => {
             id="isPrimary"
             checked={formData.isPrimary}
             onChange={(e) => setFormData({ ...formData, isPrimary: e.target.checked })}
-            className="w-4 h-4 bg-gray-900 border-gray-700 rounded focus:ring-2 focus:ring-red-500"
+            className="w-4 h-4 bg-white border-gray-300 rounded focus:ring-2 focus:ring-red-500"
           />
-          <label htmlFor="isPrimary" className="text-sm text-gray-300">
+          <label htmlFor="isPrimary" className="text-sm text-gray-800">
             Set as primary account
           </label>
         </div>
 
         {/* Balance Info (read-only) */}
         <div className="bg-blue-950/20 border border-blue-900/30 rounded-lg p-3">
-          <p className="text-xs text-gray-400 mb-1">Current Balance:</p>
-          <p className="text-lg font-bold text-white">
+          <p className="text-xs text-gray-700 mb-1">Current Balance:</p>
+          <p className="text-lg font-bold text-gray-900">
             MVR {(account?.currentBalance || 0).toFixed(2)}
           </p>
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-gray-700 mt-1">
             Balance is calculated from transactions and cannot be edited directly
           </p>
         </div>

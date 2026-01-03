@@ -68,6 +68,19 @@ export const useAuthStore = create((set, get) => ({
         startingBalance: null, // Will be set via modal after first login
       });
 
+      // Create a default account for new users
+      await db.accounts.add({
+        userId,
+        bankName: 'Bank Account',
+        accountNumber: '****',
+        nickname: 'My First Account',
+        icon: '🏦',
+        startingBalance: 0,
+        currentBalance: 0,
+        isPrimary: true,
+        createdAt: now,
+      });
+
       // Claim legacy data (records without userId) only for the very first created account.
       if (existingUserCount === 0) {
         await db.transaction('rw', db.transactions, db.categories, db.accounts, async () => {
@@ -145,7 +158,7 @@ export const useAuthStore = create((set, get) => ({
       if (candidateHash !== user.pinHash) { const attempts = (get().failedAttempts || 0) + 1; const delay = Math.min(30000, 1000 * Math.pow(2, Math.min(attempts, 4))); set({ failedAttempts: attempts, nextAllowedSignInAt: Date.now() + delay, loading: false, error: 'Invalid credentials' }); return false; }
 
       const now = new Date().toISOString();
-      await db.users.update(id, { lastLoginAt: nowIso });
+      await db.users.update(id, { lastLoginAt: now });
 
       setCurrentUserId(id);
       await get().init();
@@ -246,7 +259,7 @@ export const useAuthStore = create((set, get) => ({
     await get().init();
   },
 
-  setStartingBalance: async ({ userId, balance }) => {
+  setStartingBalance: async ({ userId, balance, accountNumber }) => {
     set({ loading: true, error: null });
     try {
       const id = safeParseId(userId);
@@ -257,13 +270,40 @@ export const useAuthStore = create((set, get) => ({
         throw new Error('Invalid balance amount');
       }
 
+      const cleanAccountNumber = String(accountNumber || '').trim();
+      if (!cleanAccountNumber || cleanAccountNumber.length < 4) {
+        throw new Error('Account number (last 4 digits) is required');
+      }
+
       // Check if starting balance is already set
       const user = await db.users.get(id);
       if (user?.startingBalance !== null && user?.startingBalance !== undefined) {
         throw new Error('Starting balance has already been set and cannot be changed');
       }
 
-      await db.users.update(id, { startingBalance: balanceNum });
+      await db.users.update(id, { 
+        startingBalance: balanceNum,
+        accountNumber: cleanAccountNumber 
+      });
+
+      // Create a default account when starting balance is set
+      const existingAccounts = await db.accounts.where('userId').equals(id).toArray();
+      if (existingAccounts.length === 0) {
+        const accountId = generateId();
+        await db.accounts.add({
+          id: accountId,
+          userId: id,
+          bankName: 'Bank Account',
+          accountNumber: cleanAccountNumber,
+          nickname: 'My Account',
+          icon: '🏦',
+          startingBalance: balanceNum,
+          currentBalance: balanceNum,
+          isPrimary: true,
+          createdAt: new Date().toISOString(),
+        });
+      }
+
       await get().init();
       return true;
     } catch (e) {

@@ -245,11 +245,11 @@ export const ReceiptScan = ({ onImport, onCancel }) => {
         <CardContent>
           <div className="space-y-3">
             {error ? (
-              <div className="text-sm text-red-400 bg-red-950/30 border border-red-900/50 p-3 rounded-lg">{error}</div>
+              <div className="text-sm text-red-900 bg-red-950/30 border border-red-200/50 p-3 rounded-lg">{error}</div>
             ) : null}
 
             <div>
-              <p className="text-xs text-gray-400 mb-2">Choose a clear receipt photo</p>
+              <p className="text-xs text-gray-700 mb-2">Choose a clear receipt photo</p>
               <Input
                 type="file"
                 accept="image/*"
@@ -259,7 +259,7 @@ export const ReceiptScan = ({ onImport, onCancel }) => {
                 <img
                   src={previewUrl}
                   alt="Receipt preview"
-                  className="mt-3 w-full rounded-lg border border-gray-800"
+                  className="mt-3 w-full rounded-lg border border-gray-200"
                 />
               ) : null}
             </div>
@@ -274,11 +274,11 @@ export const ReceiptScan = ({ onImport, onCancel }) => {
             </Button>
 
             {ocrText ? (
-              <div className="text-xs text-gray-400 bg-black/30 border border-gray-800 p-3 rounded-lg max-h-40 overflow-auto">
+              <div className="text-xs text-gray-700 bg-white border border-gray-200 p-3 rounded-lg max-h-40 overflow-auto">
                 <div className="flex items-center justify-between mb-2">
-                  <p className="font-semibold text-gray-200">Extracted Text (saved with transaction)</p>
+                  <p className="font-semibold text-gray-700">Extracted Text (saved with transaction)</p>
                   {confidence != null ? (
-                    <span className={`text-xs font-semibold ${confidence >= 80 ? 'text-green-400' : confidence >= 60 ? 'text-yellow-400' : 'text-red-400'}`}>
+                    <span className={`text-xs font-semibold ${confidence >= 80 ? 'text-emerald-500' : confidence >= 60 ? 'text-yellow-400' : 'text-red-900'}`}>
                       Confidence: {Math.round(confidence)}%
                     </span>
                   ) : null}
@@ -298,11 +298,11 @@ export const ReceiptScan = ({ onImport, onCancel }) => {
           <div className="space-y-3">
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-xs text-gray-400">Type</label>
+                <label className="text-xs text-gray-700">Type</label>
                 <select
                   value={type}
                   onChange={(e) => setType(e.target.value)}
-                  className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-lg text-gray-100"
+                  className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-900"
                 >
                   <option value="debit">Expense</option>
                   <option value="credit">Income</option>
@@ -310,7 +310,7 @@ export const ReceiptScan = ({ onImport, onCancel }) => {
               </div>
 
               <div>
-                <label className="text-xs text-gray-400">Amount (MVR)</label>
+                <label className="text-xs text-gray-700">Amount (MVR)</label>
                 <Input
                   type="number"
                   inputMode="decimal"
@@ -319,28 +319,28 @@ export const ReceiptScan = ({ onImport, onCancel }) => {
                   onChange={(e) => setAmount(e.target.value)}
                 />
                 {amount ? (
-                  <p className="text-xs text-gray-500 mt-1">{formatCurrency(Number(amount) || 0)}</p>
+                  <p className="text-xs text-gray-700 mt-1">{formatCurrency(Number(amount) || 0)}</p>
                 ) : null}
               </div>
             </div>
 
             <div>
-              <label className="text-xs text-gray-400">Merchant / Shop</label>
+              <label className="text-xs text-gray-700">Merchant / Shop</label>
               <Input value={merchant} onChange={(e) => setMerchant(e.target.value)} placeholder="e.g., STO, FOODCO" />
             </div>
 
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-xs text-gray-400">Date</label>
+                <label className="text-xs text-gray-700">Date</label>
                 <Input type="date" value={toDateInput(date)} onChange={(e) => setDate(new Date(e.target.value).toISOString())} />
               </div>
 
               <div>
-                <label className="text-xs text-gray-400">Account</label>
+                <label className="text-xs text-gray-700">Account</label>
                 <select
                   value={accountId}
                   onChange={(e) => setAccountId(e.target.value)}
-                  className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-lg text-gray-100"
+                  className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-900"
                 >
                   <option value="">Select</option>
                   {accounts.map((a) => (
@@ -353,11 +353,11 @@ export const ReceiptScan = ({ onImport, onCancel }) => {
             </div>
 
             <div>
-              <label className="text-xs text-gray-400">Category</label>
+              <label className="text-xs text-gray-700">Category</label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-lg text-gray-100"
+                className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-900"
               >
                 <option value="">Select a category</option>
                 {availableCategories.map((c) => (

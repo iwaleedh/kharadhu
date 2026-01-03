@@ -73,20 +73,20 @@ export const AddAccountModal = ({ isOpen, onClose, onSuccess }) => {
     <Modal isOpen={isOpen} onClose={onClose} title="Add Account">
       <form onSubmit={handleSubmit} className="space-y-4">
         {error && (
-          <div className="text-sm text-red-400 bg-red-950/30 border border-red-900/50 p-3 rounded-lg">
+          <div className="text-sm text-red-900 bg-red-950/30 border border-red-200/50 p-3 rounded-lg">
             {error}
           </div>
         )}
 
         {/* Bank Selection */}
         <div>
-          <label className="text-sm font-semibold text-gray-300 mb-2 block">
+          <label className="text-sm font-semibold text-gray-800 mb-2 block">
             Bank
           </label>
           <select
             value={formData.bankName}
             onChange={(e) => setFormData({ ...formData, bankName: e.target.value })}
-            className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-lg text-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+            className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
             required
           >
             <option value="">Select a bank</option>
@@ -100,7 +100,7 @@ export const AddAccountModal = ({ isOpen, onClose, onSuccess }) => {
 
         {/* Account Number */}
         <div>
-          <label className="text-sm font-semibold text-gray-300 mb-2 block">
+          <label className="text-sm font-semibold text-gray-800 mb-2 block">
             Account Number (Last 4 digits)
           </label>
           <Input
@@ -111,14 +111,14 @@ export const AddAccountModal = ({ isOpen, onClose, onSuccess }) => {
             maxLength={4}
             required
           />
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-gray-700 mt-1">
             For privacy, only enter last 4 digits (e.g., ****1234)
           </p>
         </div>
 
         {/* Nickname */}
         <div>
-          <label className="text-sm font-semibold text-gray-300 mb-2 block">
+          <label className="text-sm font-semibold text-gray-800 mb-2 block">
             Account Nickname
           </label>
           <Input
@@ -132,7 +132,7 @@ export const AddAccountModal = ({ isOpen, onClose, onSuccess }) => {
 
         {/* Starting Balance */}
         <div>
-          <label className="text-sm font-semibold text-gray-300 mb-2 block">
+          <label className="text-sm font-semibold text-gray-800 mb-2 block">
             Current Balance (MVR)
           </label>
           <Input
@@ -144,7 +144,7 @@ export const AddAccountModal = ({ isOpen, onClose, onSuccess }) => {
             onChange={(e) => setFormData({ ...formData, startingBalance: e.target.value })}
             required
           />
-          <p className="text-xs text-gray-500 mt-1">
+          <p className="text-xs text-gray-700 mt-1">
             Enter the current balance of this account
           </p>
         </div>
@@ -156,9 +156,9 @@ export const AddAccountModal = ({ isOpen, onClose, onSuccess }) => {
             id="isPrimary"
             checked={formData.isPrimary}
             onChange={(e) => setFormData({ ...formData, isPrimary: e.target.checked })}
-            className="w-4 h-4 bg-gray-900 border-gray-700 rounded focus:ring-2 focus:ring-red-500"
+            className="w-4 h-4 bg-white border-gray-300 rounded focus:ring-2 focus:ring-red-500"
           />
-          <label htmlFor="isPrimary" className="text-sm text-gray-300">
+          <label htmlFor="isPrimary" className="text-sm text-gray-800">
             Set as primary account
           </label>
         </div>

@@ -179,8 +179,8 @@ function App() {
     );
   }
 
-  const handleSetStartingBalance = async (balance) => {
-    const success = await setStartingBalance({ userId: currentUserId, balance });
+  const handleSetStartingBalance = async (balance, accountNumber) => {
+    const success = await setStartingBalance({ userId: currentUserId, balance, accountNumber });
     if (success) {
       setShowStartingBalance(false);
     }
@@ -236,22 +236,19 @@ function App() {
       >
         {!addMethod ? (
           <div className="space-y-3">
-            <p className="text-gray-600 mb-4">Choose how you'd like to add your transaction:</p>
+            <p className="text-gray-800 mb-4">Choose how you'd like to add your transaction:</p>
             
             <button
               onClick={() => setAddMethod('sms')}
-              className="w-full p-6 bg-gradient-to-br from-ocean-50 to-ocean-100 hover:from-ocean-100 hover:to-ocean-200 border-2 border-ocean-200 rounded-xl transition-all group"
+              className="w-full p-6 bg-gradient-to-br from-ocean-50 to-ocean-100 hover:from-ocean-100 hover:to-ocean-200 border-2 border-orange-200 rounded-xl transition-all group"
             >
               <div className="flex items-center space-x-4">
-                <div className="bg-ocean-600 p-3 rounded-lg group-hover:scale-110 transition-transform">
-                  <MessageSquare size={24} className="text-white" />
+                <div className="bg-orange-600 p-3 rounded-lg group-hover:scale-110 transition-transform">
+                  <MessageSquare size={24} className="text-gray-900" />
                 </div>
                 <div className="text-left">
-                  <h3 className="font-bold text-ocean-900 text-base">
-                    <span className="dhivehi block leading-tight">އެސްއެމްއެސްއިން</span>
-                    <span className="text-xs text-ocean-700 font-normal leading-tight">Import from SMS</span>
-                  </h3>
-                  <p className="text-xs text-ocean-700 mt-1">
+                  <h3 className="font-bold text-orange-900 text-base">Import from SMS</h3>
+                  <p className="text-xs text-orange-900 mt-1">
                     Paste your BML or MIB transaction SMS
                   </p>
                 </div>
@@ -264,14 +261,11 @@ function App() {
             >
               <div className="flex items-center space-x-4">
                 <div className="bg-green-600 p-3 rounded-lg group-hover:scale-110 transition-transform">
-                  <MessageSquare size={24} className="text-white" />
+                  <MessageSquare size={24} className="text-gray-900" />
                 </div>
                 <div className="text-left">
-                  <h3 className="font-bold text-green-900 text-base">
-                    <span className="dhivehi block leading-tight">ކްލިޕްބޯޑް އިން އިމްޕޯޓް</span>
-                    <span className="text-xs text-green-700 font-normal leading-tight">Import from Clipboard</span>
-                  </h3>
-                  <p className="text-xs text-green-700 mt-1">
+                  <h3 className="font-bold text-emerald-500 text-base">Import from Clipboard</h3>
+                  <p className="text-xs text-emerald-500 mt-1">
                     Copy an SMS, then tap to auto-parse
                   </p>
                 </div>
@@ -284,13 +278,10 @@ function App() {
             >
               <div className="flex items-center space-x-4">
                 <div className="bg-purple-600 p-3 rounded-lg group-hover:scale-110 transition-transform">
-                  <Camera size={24} className="text-white" />
+                  <Camera size={24} className="text-gray-900" />
                 </div>
                 <div className="text-left">
-                  <h3 className="font-bold text-purple-900 text-base">
-                    <span className="dhivehi block leading-tight">ރަސީދު ސްކޭން</span>
-                    <span className="text-xs text-purple-700 font-normal leading-tight">Scan Receipt</span>
-                  </h3>
+                  <h3 className="font-bold text-purple-900 text-base">Scan Receipt</h3>
                   <p className="text-xs text-purple-700 mt-1">
                     Offline OCR from a photo
                   </p>
@@ -304,13 +295,10 @@ function App() {
             >
               <div className="flex items-center space-x-4">
                 <div className="bg-gray-600 p-3 rounded-lg group-hover:scale-110 transition-transform">
-                  <FileText size={24} className="text-white" />
+                  <FileText size={24} className="text-gray-900" />
                 </div>
                 <div className="text-left">
-                  <h3 className="font-bold text-gray-900 text-base">
-                    <span className="dhivehi block leading-tight">އަމިއްލައަށް ލިޔުއްވުން</span>
-                    <span className="text-xs text-gray-700 font-normal leading-tight">Manual Entry</span>
-                  </h3>
+                  <h3 className="font-bold text-gray-900 text-base">Manual Entry</h3>
                   <p className="text-xs text-gray-700 mt-1">
                     Enter transaction details manually
                   </p>

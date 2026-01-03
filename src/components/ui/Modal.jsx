@@ -28,21 +28,21 @@ export const Modal = ({ isOpen, onClose, title, children, size = 'md', showClose
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 fade-in">
       {/* Backdrop */}
       <div 
-        className="absolute inset-0 bg-black/80 backdrop-blur-md"
+        className="absolute inset-0 bg-white/80 backdrop-blur-md"
         onClick={showCloseButton ? onClose : undefined}
       />
       
       {/* Modal */}
-      <div className={cn('relative bg-gradient-to-br from-gray-900 to-black rounded-t-2xl sm:rounded-2xl shadow-2xl w-full border border-gray-800', sizes[size], 'max-h-[90vh] overflow-hidden slide-up')}>
+      <div className={cn('relative bg-white rounded-t-2xl sm:rounded-2xl shadow-2xl w-full border border-gray-200', sizes[size], 'max-h-[90vh] overflow-hidden slide-up')}>
         {/* Header */}
-        <div className="flex items-center justify-between p-4 border-b border-red-900/30 bg-gradient-to-r from-red-950/20 to-transparent">
-          <h2 className="text-lg font-bold bg-gradient-to-r from-gray-100 to-gray-300 bg-clip-text text-transparent">{title}</h2>
+        <div className="flex items-center justify-between p-4 border-b border-orange-200 bg-gradient-to-r from-orange-50 to-blue-50">
+          <h2 className="text-lg font-bold text-gray-900">{title}</h2>
           {showCloseButton && (
             <button
               onClick={onClose}
-              className="p-2 hover:bg-red-950/50 active:bg-red-900/50 rounded-lg transition-all duration-300"
+              className="p-2 hover:bg-gray-100 active:bg-gray-200 rounded-lg transition-all duration-300"
             >
-              <X size={20} className="text-gray-400" />
+              <X size={20} className="text-gray-700" />
             </button>
           )}
         </div>

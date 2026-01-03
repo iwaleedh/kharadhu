@@ -84,13 +84,13 @@ export const ConfirmDialog = ({
       size="sm"
     >
       <div className="space-y-4">
-        <p className="text-sm text-gray-200">{message}</p>
+        <p className="text-sm text-gray-700">{message}</p>
 
         {normalizedRequired ? (
           <div className={`space-y-2 ${shake ? 'shake-x' : ''}`}>
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-gray-700">
               {requireTextLabel}:{' '}
-              <span className="font-semibold text-white">{normalizedRequired}</span>
+              <span className="font-semibold text-gray-900">{normalizedRequired}</span>
             </p>
             <Input
               ref={inputRef}
@@ -103,7 +103,7 @@ export const ConfirmDialog = ({
             />
             <p
               className={`text-xs ${
-                typed.length === 0 ? 'text-gray-500' : isMatch ? 'text-tropical-400' : 'text-coral-400'
+                typed.length === 0 ? 'text-gray-700' : isMatch ? 'text-green-400' : 'text-red-400'
               }`}
             >
               {typed.length === 0 ? 'Not typed yet' : isMatch ? 'Matched' : 'Not matched'}
@@ -112,7 +112,7 @@ export const ConfirmDialog = ({
         ) : null}
 
         {requireAcknowledge ? (
-          <label className="flex items-center gap-2 text-sm text-gray-300">
+          <label className="flex items-center gap-2 text-sm text-gray-800">
             <input
               type="checkbox"
               checked={ack}
@@ -127,7 +127,7 @@ export const ConfirmDialog = ({
         ) : null}
 
         {blockedReason ? (
-          <p className="text-xs text-coral-400">{blockedReason}</p>
+          <p className="text-xs text-red-400">{blockedReason}</p>
         ) : null}
 
         <div className="flex space-x-2">

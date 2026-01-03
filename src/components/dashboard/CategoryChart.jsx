@@ -12,7 +12,7 @@ export const CategoryChart = ({ data }) => {
           <CardTitle>Spending by Category</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center justify-center h-64 text-gray-500">
+          <div className="flex items-center justify-center h-64 text-gray-700">
             No data available
           </div>
         </CardContent>
@@ -29,10 +29,7 @@ export const CategoryChart = ({ data }) => {
   return (
     <Card className="p-3">
       <CardHeader className="mb-2">
-        <CardTitle className="text-base">
-          <span className="dhivehi block leading-tight">ބައިތަކުން ހަރަދު</span>
-          <span className="text-[10px] text-gray-600 leading-tight">Spending by Category</span>
-        </CardTitle>
+        <CardTitle className="text-base">Spending by Category</CardTitle>
       </CardHeader>
       <CardContent className="p-0">
         <ResponsiveContainer width="100%" height={220}>

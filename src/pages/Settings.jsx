@@ -126,19 +126,19 @@ export const Settings = () => {
         }}
       />
       {hasLegacyDb ? (
-        <Card className="bg-red-950/20 border border-red-900/40">
+        <Card className="bg-red-950/20 border border-red-200/40">
           <CardHeader>
-            <CardTitle className="text-gray-100">Legacy data detected</CardTitle>
+            <CardTitle className="text-gray-900">Legacy data detected</CardTitle>
           </CardHeader>
           <CardContent>
-            <p className="text-sm text-gray-200 mb-3">
+            <p className="text-sm text-gray-700 mb-3">
               We found an older local database named <span className="font-semibold">MaldivesExpenseTracker</span>. Your app now uses <span className="font-semibold">Kharadhu</span> and does not migrate old data.
             </p>
             {legacyExportError ? (
-              <p className="text-sm text-coral-400 mb-2">{legacyExportError}</p>
+              <p className="text-sm text-red-400 mb-2">{legacyExportError}</p>
             ) : null}
             {legacyExportError ? (
-              <p className="text-sm text-coral-400 mb-2">{legacyExportError}</p>
+              <p className="text-sm text-red-400 mb-2">{legacyExportError}</p>
             ) : null}
 
             <div className="flex flex-col sm:flex-row gap-2">
@@ -169,10 +169,8 @@ export const Settings = () => {
       ) : null}
 
       <div>
-        <h2 className="text-xl font-bold text-gray-100">
-          <span className="dhivehi">ސެޓިންގްސް</span> <span className="text-base text-gray-300">Settings</span>
-        </h2>
-        <p className="text-sm text-gray-400"><span className="dhivehi">އެޕްގެ މައުލޫމާތު</span></p>
+        <h2 className="text-xl font-bold text-gray-900">Settings</h2>
+        <p className="text-sm text-gray-700">App Configuration</p>
       </div>
 
       {/* Security Settings */}
@@ -183,7 +181,7 @@ export const Settings = () => {
         <CardContent>
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <label className="text-base text-gray-300">Require PIN on account switch</label>
+              <label className="text-base text-gray-800">Require PIN on account switch</label>
               <input
                 type="checkbox"
                 defaultChecked={getSecuritySettings().requirePinOnSwitch}
@@ -191,9 +189,9 @@ export const Settings = () => {
               />
             </div>
             <div className="flex items-center justify-between">
-              <label className="text-base text-gray-300">Auto sign-out after inactivity</label>
+              <label className="text-base text-gray-800">Auto sign-out after inactivity</label>
               <select
-                className="bg-gray-900 border border-gray-700 rounded-lg text-gray-100 px-3 py-2"
+                className="bg-white border border-gray-300 rounded-lg text-gray-900 px-3 py-2"
                 defaultValue={getSecuritySettings().idleTimeoutMinutes}
                 onChange={(e) => updateSecuritySettings({ idleTimeoutMinutes: Number(e.target.value) })}
               >
@@ -215,23 +213,21 @@ export const Settings = () => {
       {/* App Info */}
       <Card>
         <CardHeader>
-          <CardTitle>
-            <span className="dhivehi">އެޕްގެ މައުލޫމާތު</span> <span className="text-base text-gray-300">App Information</span>
-          </CardTitle>
+          <CardTitle>App Information</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
-            <div className="flex items-center justify-between py-2 border-b border-gray-800">
-              <span className="text-base text-gray-300">Version</span>
-              <span className="text-base font-semibold text-white">1.0.0</span>
+            <div className="flex items-center justify-between py-2 border-b border-gray-200">
+              <span className="text-base text-gray-800">Version</span>
+              <span className="text-base font-semibold text-gray-900">1.0.0</span>
             </div>
-            <div className="flex items-center justify-between py-2 border-b border-gray-800">
-              <span className="text-base text-gray-300">Total Transactions</span>
-              <span className="text-base font-semibold text-white">{transactions.length}</span>
+            <div className="flex items-center justify-between py-2 border-b border-gray-200">
+              <span className="text-base text-gray-800">Total Transactions</span>
+              <span className="text-base font-semibold text-gray-900">{transactions.length}</span>
             </div>
             <div className="flex items-center justify-between py-2">
-              <span className="text-base text-gray-300">Data Storage</span>
-              <span className="text-base font-semibold text-white">Local (IndexedDB)</span>
+              <span className="text-base text-gray-800">Data Storage</span>
+              <span className="text-base font-semibold text-gray-900">Local (IndexedDB)</span>
             </div>
           </div>
         </CardContent>
@@ -240,9 +236,7 @@ export const Settings = () => {
       {/* Theme Preference */}
       <Card>
         <CardHeader>
-          <CardTitle>
-            <span className="dhivehi">ތަމާއްދޫ ޚިޔާ</span> <span className="text-base text-gray-300">Theme Preference</span>
-          </CardTitle>
+          <CardTitle>Theme Preference</CardTitle>
         </CardHeader>
         <CardContent>
           <ThemePreference />
@@ -252,9 +246,7 @@ export const Settings = () => {
       {/* Data Management */}
       <Card>
         <CardHeader>
-          <CardTitle>
-            <span className="dhivehi">ޑޭޓާ ބެލެހެއްޓުން</span> <span className="text-base text-gray-300">Data Management</span>
-          </CardTitle>
+          <CardTitle>Data Management</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
@@ -267,18 +259,18 @@ export const Settings = () => {
               <span>Export Data (CSV)</span>
             </Button>
 
-            <Card className="bg-black/30 border border-gray-800">
+            <Card className="bg-white border border-gray-200">
               <CardHeader>
-                <CardTitle className="text-gray-100">Import CSV</CardTitle>
+                <CardTitle className="text-gray-900">Import CSV</CardTitle>
               </CardHeader>
               <CardContent>
-                {csvImportError ? <p className="text-sm text-red-400 mb-2">{csvImportError}</p> : null}
-                {csvImportSuccess ? <p className="text-sm text-green-400 mb-2">{csvImportSuccess}</p> : null}
+                {csvImportError ? <p className="text-sm text-red-900 mb-2">{csvImportError}</p> : null}
+                {csvImportSuccess ? <p className="text-sm text-emerald-500 mb-2">{csvImportSuccess}</p> : null}
 
                 <input
                   type="file"
                   accept="text/csv,.csv"
-                  className="block w-full text-sm text-gray-200 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-gray-800 file:text-gray-100 hover:file:bg-gray-700"
+                  className="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-gray-800 file:text-gray-900 hover:file:bg-gray-700"
                   onChange={async (e) => {
                     setCsvImportError(null);
                     setCsvImportSuccess(null);
@@ -308,30 +300,30 @@ export const Settings = () => {
                   disabled={csvImporting}
                 />
 
-                <p className="text-xs text-gray-400 mt-2">
+                <p className="text-xs text-gray-700 mt-2">
                   Use the exported CSV format from Kharadhu (Date, Type, Amount, Category, Merchant, Bank, Account, Balance, Description).
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="bg-black/30 border border-gray-800">
+            <Card className="bg-white border border-gray-200">
               <CardHeader>
-                <CardTitle className="text-gray-100">Import legacy backup</CardTitle>
+                <CardTitle className="text-gray-900">Import legacy backup</CardTitle>
               </CardHeader>
               <CardContent>
                 {legacyImportError ? (
-                  <p className="text-sm text-coral-400 mb-2">{legacyImportError}</p>
+                  <p className="text-sm text-red-400 mb-2">{legacyImportError}</p>
                 ) : null}
                 {legacyImportSuccess ? (
-                  <p className="text-sm text-tropical-300 mb-2">{legacyImportSuccess}</p>
+                  <p className="text-sm text-green-300 mb-2">{legacyImportSuccess}</p>
                 ) : null}
 
                 <div className="space-y-2">
-                  <label className="text-sm text-gray-300">Backup file (JSON)</label>
+                  <label className="text-sm text-gray-800">Backup file (JSON)</label>
                   <input
                     type="file"
                     accept="application/json,.json"
-                    className="block w-full text-sm text-gray-200 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-gray-800 file:text-gray-100 hover:file:bg-gray-700"
+                    className="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-gray-800 file:text-gray-900 hover:file:bg-gray-700"
                     onChange={async (e) => {
                       setLegacyImportSuccess(null);
                       setLegacyImportError(null);
@@ -350,9 +342,9 @@ export const Settings = () => {
                   />
 
                   {legacyPreview ? (
-                    <div className="text-sm text-gray-300 bg-black/30 border border-gray-800 rounded-lg p-3">
-                      <div className="font-semibold text-gray-100 mb-1">Preview</div>
-                      <div className="text-xs text-gray-400">
+                    <div className="text-sm text-gray-800 bg-white border border-gray-200 rounded-lg p-3">
+                      <div className="font-semibold text-gray-900 mb-1">Preview</div>
+                      <div className="text-xs text-gray-700">
                         {legacyPreview.dbName ? `DB: ${legacyPreview.dbName} • ` : ''}
                         {legacyPreview.version ? `Version: ${legacyPreview.version} • ` : ''}
                         {legacyPreview.exportedAt ? `Exported: ${legacyPreview.exportedAt}` : ''}
@@ -366,7 +358,7 @@ export const Settings = () => {
                     </div>
                   ) : null}
 
-                  <label className="flex items-center gap-2 text-sm text-gray-300">
+                  <label className="flex items-center gap-2 text-sm text-gray-800">
                     <input
                       type="checkbox"
                       checked={legacyImportAcknowledge}
@@ -417,29 +409,29 @@ export const Settings = () => {
       </Card>
 
       {/* About */}
-      <Card className="bg-gradient-to-br from-red-950/30 to-red-900/20 border-red-900/50">
+      <Card className="bg-gradient-to-br from-red-50/30 to-red-100/20 border-red-200/50">
         <CardHeader>
           <div className="flex items-center space-x-2">
-            <Info size={20} className="text-red-400" />
-            <CardTitle className="text-gray-100">About This App</CardTitle>
+            <Info size={20} className="text-red-900" />
+            <CardTitle className="text-gray-900">About This App</CardTitle>
           </div>
         </CardHeader>
         <CardContent>
-          <div className="text-base text-gray-200 space-y-2">
+          <div className="text-base text-gray-700 space-y-2">
             <p>
-              <strong className="text-white">Kharadhu</strong> <span className="dhivehi">(ޚަރަދު ބަރަދު ބެލެހެއްޓުން)</span> is a personal finance management tool designed specifically for BML and MIB customers in the Maldives.
+              <strong className="text-gray-900">Kharadhu</strong> is a personal finance management tool designed specifically for BML and MIB customers in the Maldives.
             </p>
-            <p className="text-white">
+            <p className="text-gray-900">
               <strong>Features:</strong>
             </p>
-            <ul className="list-disc list-inside space-y-1 ml-2 text-gray-300">
+            <ul className="list-disc list-inside space-y-1 ml-2 text-gray-800">
               <li>SMS transaction parsing (BML & MIB)</li>
               <li>Automatic categorization</li>
               <li>Visual reports and analytics</li>
               <li>Local data storage (privacy-first)</li>
               <li>Export to CSV</li>
             </ul>
-            <p className="mt-4 text-sm text-gray-400">
+            <p className="mt-4 text-sm text-gray-700">
               All your financial data is stored locally on your device. No data is sent to external servers.
             </p>
           </div>
@@ -452,12 +444,12 @@ export const Settings = () => {
           <CardTitle>Support & Feedback</CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-base text-gray-300 mb-4">
+          <p className="text-base text-gray-800 mb-4">
             Have questions or suggestions? We'd love to hear from you!
           </p>
           <div className="space-y-2 text-base">
-            <p className="text-gray-200"><strong className="text-white">Email:</strong> support@expensetracker.mv</p>
-            <p className="text-gray-200"><strong className="text-white">Version:</strong> 1.0.0 (2026)</p>
+            <p className="text-gray-700"><strong className="text-gray-900">Email:</strong> support@expensetracker.mv</p>
+            <p className="text-gray-700"><strong className="text-gray-900">Version:</strong> 1.0.0 (2026)</p>
           </div>
         </CardContent>
       </Card>

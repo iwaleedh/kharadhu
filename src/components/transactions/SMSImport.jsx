@@ -206,10 +206,10 @@ export const SMSImport = ({ onImport, onCancel, initialText = '', autoParse = fa
       <Card className="p-3">
         <CardHeader className="mb-3">
           <div className="flex items-center space-x-2">
-            <MessageSquare className="text-ocean-600" size={20} />
+            <MessageSquare className="text-orange-600" size={20} />
             <CardTitle className="text-base">Import from SMS</CardTitle>
           </div>
-          <p className="text-xs text-gray-600 mt-2">
+          <p className="text-xs text-gray-800 mt-2">
             Copy and paste your BML or MIB transaction SMS below
           </p>
         </CardHeader>
@@ -245,19 +245,19 @@ export const SMSImport = ({ onImport, onCancel, initialText = '', autoParse = fa
         <Card className="border-2 border-green-500">
           <CardHeader>
             <div className="flex items-center space-x-2">
-              <CheckCircle className="text-green-600" size={24} />
-              <CardTitle className="text-green-600">Transaction Parsed Successfully!</CardTitle>
+              <CheckCircle className="text-emerald-500" size={24} />
+              <CardTitle className="text-emerald-500">Transaction Parsed Successfully!</CardTitle>
             </div>
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <p className="text-xs text-gray-500 mb-1">Type</p>
+                  <p className="text-xs text-gray-700 mb-1">Type</p>
                   <select
                     value={parsedData.type === 'debit' ? 'expense' : 'income'}
                     onChange={handleTypeChange}
-                    className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-lg text-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm"
+                    className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm"
                   >
                     <option value="expense">Expense</option>
                     <option value="income">Income</option>
@@ -265,7 +265,7 @@ export const SMSImport = ({ onImport, onCancel, initialText = '', autoParse = fa
                 </div>
                 
                 <div>
-                  <p className="text-xs text-gray-500 mb-1">Amount</p>
+                  <p className="text-xs text-gray-700 mb-1">Amount</p>
                   <Input
                     type="number"
                     inputMode="decimal"
@@ -276,11 +276,11 @@ export const SMSImport = ({ onImport, onCancel, initialText = '', autoParse = fa
                 </div>
                 
                 <div>
-                  <p className="text-xs text-gray-500 mb-1">Bank</p>
+                  <p className="text-xs text-gray-700 mb-1">Bank</p>
                   <select
                     value={parsedData.bank || ''}
                     onChange={handleBankChange}
-                    className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-lg text-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm"
+                    className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm"
                   >
                     {availableBanks.map((b) => (
                       <option key={b} value={b}>{b}</option>
@@ -289,11 +289,11 @@ export const SMSImport = ({ onImport, onCancel, initialText = '', autoParse = fa
                 </div>
                 
                 <div>
-                  <p className="text-xs text-gray-500 mb-1">Account</p>
+                  <p className="text-xs text-gray-700 mb-1">Account</p>
                   <select
                     value={parsedData.accountId || ''}
                     onChange={handleAccountChange}
-                    className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-lg text-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm"
+                    className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm"
                   >
                     <option value="">Select account</option>
                     {accountsForSelectedBank.map((a) => (
@@ -305,7 +305,7 @@ export const SMSImport = ({ onImport, onCancel, initialText = '', autoParse = fa
                 </div>
                 
                 <div>
-                  <p className="text-xs text-gray-500 mb-1">From / Merchant</p>
+                  <p className="text-xs text-gray-700 mb-1">From / Merchant</p>
                   <Input
                     type="text"
                     value={parsedData.merchant || ''}
@@ -315,11 +315,11 @@ export const SMSImport = ({ onImport, onCancel, initialText = '', autoParse = fa
                 </div>
                 
                 <div className="col-span-2">
-                  <p className="text-xs text-gray-500 mb-1">Category</p>
+                  <p className="text-xs text-gray-700 mb-1">Category</p>
                   <select
                     value={selectedCategory}
                     onChange={handleCategoryChange}
-                    className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-lg text-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm dhivehi"
+                    className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm"
                     required
                   >
                     <option value="">Select a category</option>
@@ -334,13 +334,13 @@ export const SMSImport = ({ onImport, onCancel, initialText = '', autoParse = fa
                         </option>
                       ))}
                   </select>
-                  <p className="text-xs text-gray-400 mt-1">
+                  <p className="text-xs text-gray-700 mt-1">
                     Auto-detected: {parsedData.category || 'None'}. You can change it above.
                   </p>
                 </div>
                 
                 <div>
-                  <p className="text-xs text-gray-500 mb-1">Date / Time</p>
+                  <p className="text-xs text-gray-700 mb-1">Date / Time</p>
                   <Input
                     type="datetime-local"
                     value={toDatetimeLocalValue(parsedData.date)}
@@ -354,7 +354,7 @@ export const SMSImport = ({ onImport, onCancel, initialText = '', autoParse = fa
                 </div>
                 
                 <div>
-                  <p className="text-xs text-gray-500 mb-1">Reference No.</p>
+                  <p className="text-xs text-gray-700 mb-1">Reference No.</p>
                   <Input
                     type="text"
                     value={parsedData.referenceNumber || ''}
@@ -364,14 +364,14 @@ export const SMSImport = ({ onImport, onCancel, initialText = '', autoParse = fa
                 </div>
                 
                 <div>
-                  <p className="text-xs text-gray-500 mb-1">Balance (from SMS)</p>
+                  <p className="text-xs text-gray-700 mb-1">Balance (from SMS)</p>
                   <p className="font-semibold">{formatCurrency(parsedData.balance || 0)}</p>
                 </div>
               </div>
               
               <div className="pt-4 border-t border-gray-200 space-y-2">
                 <div>
-                  <p className="text-xs text-gray-500 mb-1">Notes / Description (optional)</p>
+                  <p className="text-xs text-gray-700 mb-1">Notes / Description (optional)</p>
                   <Input
                     type="text"
                     value={parsedData.description || ''}
@@ -402,20 +402,20 @@ export const SMSImport = ({ onImport, onCancel, initialText = '', autoParse = fa
         <CardContent>
           <div className="space-y-3 text-xs">
             <div>
-              <p className="font-semibold text-ocean-600 mb-1">BML Example:</p>
-              <p className="text-gray-600 bg-white p-2 rounded">
+              <p className="font-semibold text-orange-600 mb-1">BML Example:</p>
+              <p className="text-gray-800 bg-white p-2 rounded">
                 BML: Your account ending 1234 has been debited MVR 250.00 at FOODCO on 02-Jan-26. Balance: MVR 5,750.00
               </p>
             </div>
             <div>
-              <p className="font-semibold text-ocean-600 mb-1">MIB Example (Debit):</p>
-              <p className="text-gray-600 bg-white p-2 rounded">
+              <p className="font-semibold text-orange-600 mb-1">MIB Example (Debit):</p>
+              <p className="text-gray-800 bg-white p-2 rounded">
                 MIB Alert: Debit of MVR 150.50 from A/C ***5678 at STO MALE on 02/01/26. Avl Bal: MVR 8,500.00
               </p>
             </div>
             <div>
-              <p className="font-semibold text-ocean-600 mb-1">MIB Example (Fund Transfer - Income):</p>
-              <p className="text-gray-600 bg-white p-2 rounded">
+              <p className="font-semibold text-orange-600 mb-1">MIB Example (Fund Transfer - Income):</p>
+              <p className="text-gray-800 bg-white p-2 rounded">
                 Fund Transfer from your account 99010***72100 for MVR 110.00 was processed on 01/01/2026 11:34:47. Ref. no. 122836305-67052491
               </p>
             </div>

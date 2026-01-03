@@ -103,33 +103,31 @@ export const Profile = () => {
 
       {/* Header */}
       <div>
-        <h2 className="text-xl font-bold text-gray-100">
-          <span className="dhivehi">ޕްރޮފައިލް</span> <span className="text-base text-gray-300">Profile</span>
-        </h2>
-        <p className="text-sm text-gray-400"><span className="dhivehi">އެކައުންޓް ބެލެހެއްޓުން</span></p>
+        <h2 className="text-xl font-bold text-gray-900">Profile</h2>
+        <p className="text-sm text-gray-700">Account Management</p>
       </div>
 
       {/* Current Account Info */}
-      <Card className="bg-gradient-to-br from-red-950/30 to-red-900/20 border-red-900/50">
+      <Card className="bg-gradient-to-br from-red-50/30 to-red-100/20 border-red-200/50">
         <CardHeader>
           <div className="flex items-center space-x-2">
-            <User size={20} className="text-red-400" />
-            <CardTitle className="text-gray-100">Current Account</CardTitle>
+            <User size={20} className="text-red-900" />
+            <CardTitle className="text-gray-900">Current Account</CardTitle>
           </div>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
             <div className="flex items-center justify-between py-2">
-              <span className="text-base text-gray-300">Name</span>
-              <span className="text-lg font-semibold text-white">{currentUser?.name || '—'}</span>
+              <span className="text-base text-gray-800">Name</span>
+              <span className="text-lg font-semibold text-gray-900">{currentUser?.name || '—'}</span>
             </div>
-            <div className="flex items-center justify-between py-2 border-t border-red-900/30">
-              <span className="text-base text-gray-300">Account ID</span>
-              <span className="text-base font-mono text-gray-400">#{currentUser?.id || '—'}</span>
+            <div className="flex items-center justify-between py-2 border-t border-red-200/30">
+              <span className="text-base text-gray-800">Account ID</span>
+              <span className="text-base font-mono text-gray-700">#{currentUser?.id || '—'}</span>
             </div>
-            <div className="flex items-center justify-between py-2 border-t border-red-900/30">
-              <span className="text-base text-gray-300">Created</span>
-              <span className="text-sm text-gray-400">
+            <div className="flex items-center justify-between py-2 border-t border-red-200/30">
+              <span className="text-base text-gray-800">Created</span>
+              <span className="text-sm text-gray-700">
                 {currentUser?.createdAt ? new Date(currentUser.createdAt).toLocaleDateString() : '—'}
               </span>
             </div>
@@ -138,11 +136,9 @@ export const Profile = () => {
       </Card>
 
       {/* Account Actions */}
-      <Card>
+      <Card className="bg-orange-50 border border-orange-200">
         <CardHeader>
-          <CardTitle>
-            <span className="dhivehi">އެކައުންޓް އެކްޝަންސް</span> <span className="text-base text-gray-300">Account Actions</span>
-          </CardTitle>
+          <CardTitle className="text-orange-900">Account Actions</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
@@ -186,11 +182,9 @@ export const Profile = () => {
       </Card>
 
       {/* Switch Account */}
-      <Card>
+      <Card className="bg-green-50 border border-green-200">
         <CardHeader>
-          <CardTitle>
-            <span className="dhivehi">އެކައުންޓް ބަދަލުކުރުން</span> <span className="text-base text-gray-300">Switch Account</span>
-          </CardTitle>
+          <CardTitle className="text-green-900">Switch Account</CardTitle>
         </CardHeader>
         <CardContent>
           {users.length > 1 ? (
@@ -202,8 +196,8 @@ export const Profile = () => {
                   className={cn(
                     'w-full p-3 rounded-lg border transition-all duration-300 flex items-center justify-between',
                     currentUser?.id === user.id
-                      ? 'bg-red-950/50 border-red-900/50 text-white'
-                      : 'bg-black/30 border-gray-800 text-gray-300 hover:bg-black/40 hover:border-gray-700'
+                      ? 'bg-red-950/50 border-red-200/50 text-white'
+                      : 'bg-white border-gray-200 text-gray-800 hover:bg-blue-50 hover:border-gray-300'
                   )}
                 >
                   <div className="flex items-center space-x-3">
@@ -211,11 +205,11 @@ export const Profile = () => {
                       'p-2 rounded-full',
                       currentUser?.id === user.id ? 'bg-red-600' : 'bg-gray-700'
                     )}>
-                      <User size={16} className="text-white" />
+                      <User size={16} className="text-gray-900" />
                     </div>
                     <div className="text-left">
                       <p className="font-semibold">{user.name}</p>
-                      <p className="text-xs text-gray-500">ID: #{user.id}</p>
+                      <p className="text-xs text-gray-700">ID: #{user.id}</p>
                     </div>
                   </div>
                   {currentUser?.id === user.id && (
@@ -227,7 +221,7 @@ export const Profile = () => {
               ))}
             </div>
           ) : (
-            <p className="text-sm text-gray-400 text-center py-4">
+            <p className="text-sm text-gray-700 text-center py-4">
               No other accounts available
             </p>
           )}
@@ -235,7 +229,7 @@ export const Profile = () => {
       </Card>
 
       {/* Create New Account */}
-      <Card>
+      <Card className="bg-blue-50 border border-blue-200">
         <CardContent className="pt-4">
           <Button
             variant="outline"
@@ -249,7 +243,7 @@ export const Profile = () => {
       </Card>
 
       {/* Sign Out */}
-      <Card>
+      <Card className="bg-blue-50 border border-blue-200">
         <CardContent className="pt-4">
           <Button
             variant="danger"

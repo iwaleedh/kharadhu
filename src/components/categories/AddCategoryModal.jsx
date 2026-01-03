@@ -64,20 +64,20 @@ export const AddCategoryModal = ({ isOpen, onClose, onSuccess }) => {
     <Modal isOpen={isOpen} onClose={onClose} title="Add Category">
       <form onSubmit={handleSubmit} className="space-y-4">
         {error && (
-          <div className="text-sm text-red-400 bg-red-950/30 border border-red-900/50 p-3 rounded-lg">
+          <div className="text-sm text-red-900 bg-red-950/30 border border-red-200/50 p-3 rounded-lg">
             {error}
           </div>
         )}
 
         {/* Category Type */}
         <div>
-          <label className="text-sm font-semibold text-gray-300 mb-2 block">
+          <label className="text-sm font-semibold text-gray-800 mb-2 block">
             Type
           </label>
           <select
             value={formData.type}
             onChange={(e) => setFormData({ ...formData, type: e.target.value })}
-            className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-lg text-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
+            className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500"
             required
           >
             <option value="expense">Expense</option>
@@ -87,7 +87,7 @@ export const AddCategoryModal = ({ isOpen, onClose, onSuccess }) => {
 
         {/* Name (English) */}
         <div>
-          <label className="text-sm font-semibold text-gray-300 mb-2 block">
+          <label className="text-sm font-semibold text-gray-800 mb-2 block">
             Category Name (English)
           </label>
           <Input
@@ -101,7 +101,7 @@ export const AddCategoryModal = ({ isOpen, onClose, onSuccess }) => {
 
         {/* Name (Dhivehi) */}
         <div>
-          <label className="text-sm font-semibold text-gray-300 mb-2 block">
+          <label className="text-sm font-semibold text-gray-800 mb-2 block">
             Category Name (Dhivehi)
           </label>
           <Input
@@ -109,14 +109,14 @@ export const AddCategoryModal = ({ isOpen, onClose, onSuccess }) => {
             placeholder="e.g., ކައްކާބާ، ދަތުރުފަތުރު، ބިލްތައް"
             value={formData.nameDv}
             onChange={(e) => setFormData({ ...formData, nameDv: e.target.value })}
-            className="dhivehi"
+            className=""
             required
           />
         </div>
 
         {/* Icon Selector */}
         <div>
-          <label className="text-sm font-semibold text-gray-300 mb-2 block">
+          <label className="text-sm font-semibold text-gray-800 mb-2 block">
             Icon
           </label>
           <div className="flex items-center space-x-2 mb-2">
@@ -149,7 +149,7 @@ export const AddCategoryModal = ({ isOpen, onClose, onSuccess }) => {
 
         {/* Color Selector */}
         <div>
-          <label className="text-sm font-semibold text-gray-300 mb-2 block">
+          <label className="text-sm font-semibold text-gray-800 mb-2 block">
             Color
           </label>
           <div className="grid grid-cols-8 gap-2">
@@ -170,7 +170,7 @@ export const AddCategoryModal = ({ isOpen, onClose, onSuccess }) => {
 
         {/* Budget (Optional) */}
         <div>
-          <label className="text-sm font-semibold text-gray-300 mb-2 block">
+          <label className="text-sm font-semibold text-gray-800 mb-2 block">
             Monthly Budget (Optional)
           </label>
           <Input

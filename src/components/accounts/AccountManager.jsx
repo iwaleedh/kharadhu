@@ -43,7 +43,7 @@ export const AccountManager = ({ onAccountSelect, selectedAccountId }) => {
   if (loading) {
     return (
       <Card>
-        <CardContent className="py-8 text-center text-gray-400">
+        <CardContent className="py-8 text-center text-gray-700">
           Loading accounts...
         </CardContent>
       </Card>
@@ -55,10 +55,7 @@ export const AccountManager = ({ onAccountSelect, selectedAccountId }) => {
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle>
-              <span className="dhivehi">މައި އެކައުންޓްތައް</span>
-              <span className="text-sm text-gray-400 ml-2">My Accounts</span>
-            </CardTitle>
+            <CardTitle>My Accounts</CardTitle>
             <Button
               size="sm"
               onClick={() => setShowAddModal(true)}
@@ -71,12 +68,12 @@ export const AccountManager = ({ onAccountSelect, selectedAccountId }) => {
         </CardHeader>
         <CardContent>
           {/* Total Balance */}
-          <div className="mb-4 p-4 bg-gradient-to-br from-red-950/30 to-red-900/20 border border-red-900/50 rounded-lg">
-            <div className="text-sm text-gray-400 mb-1">Total Balance</div>
-            <div className="text-2xl font-bold text-white">
+          <div className="mb-4 p-4 bg-gradient-to-br from-red-50/30 to-red-100/20 border border-red-200/50 rounded-lg">
+            <div className="text-sm text-gray-700 mb-1">Total Balance</div>
+            <div className="text-2xl font-bold text-gray-900">
               {formatCurrency(totalBalance)}
             </div>
-            <div className="text-xs text-gray-500 mt-1">
+            <div className="text-xs text-gray-700 mt-1">
               Across {accounts.length} account{accounts.length !== 1 ? 's' : ''}
             </div>
           </div>
@@ -84,7 +81,7 @@ export const AccountManager = ({ onAccountSelect, selectedAccountId }) => {
           {/* Account List */}
           {accounts.length === 0 ? (
             <div className="text-center py-8">
-              <p className="text-gray-400 mb-4">No accounts yet</p>
+              <p className="text-gray-700 mb-4">No accounts yet</p>
               <Button onClick={() => setShowAddModal(true)}>
                 <Plus size={16} className="mr-2" />
                 Add Your First Account
@@ -98,8 +95,8 @@ export const AccountManager = ({ onAccountSelect, selectedAccountId }) => {
                   className={cn(
                     'w-full p-3 rounded-lg border transition-all duration-300',
                     selectedAccountId === account.id
-                      ? 'bg-red-950/50 border-red-900/50'
-                      : 'bg-black/30 border-gray-800 hover:bg-black/40 hover:border-gray-700'
+                      ? 'bg-red-950/50 border-red-200/50'
+                      : 'bg-white border-gray-200 hover:bg-blue-50 hover:border-gray-300'
                   )}
                 >
                   <div className="flex items-center justify-between">
@@ -115,24 +112,24 @@ export const AccountManager = ({ onAccountSelect, selectedAccountId }) => {
                       {/* Account Details */}
                       <div className="flex-1">
                         <div className="flex items-center space-x-2">
-                          <p className="font-semibold text-white">{account.nickname}</p>
+                          <p className="font-semibold text-gray-900">{account.nickname}</p>
                           {account.isPrimary && (
-                            <span className="text-xs bg-red-600 px-2 py-0.5 rounded-full text-white">
+                            <span className="text-xs bg-red-600 px-2 py-0.5 rounded-full text-gray-900">
                               Primary
                             </span>
                           )}
                         </div>
-                        <p className="text-sm text-gray-400">
+                        <p className="text-sm text-gray-700">
                           {account.bankName} {account.accountNumber}
                         </p>
                       </div>
 
                       {/* Balance */}
                       <div className="text-right">
-                        <p className="text-lg font-bold text-white">
+                        <p className="text-lg font-bold text-gray-900">
                           {formatCurrency(account.currentBalance || 0)}
                         </p>
-                        <p className="text-xs text-gray-500">Balance</p>
+                        <p className="text-xs text-gray-700">Balance</p>
                       </div>
                     </div>
 
@@ -154,7 +151,7 @@ export const AccountManager = ({ onAccountSelect, selectedAccountId }) => {
                        }}
                        className="p-1.5 hover:bg-gray-700 rounded transition-colors"
                      >
-                       <Edit2 size={16} className="text-gray-400" />
+                       <Edit2 size={16} className="text-gray-700" />
                      </button>
                      <button
                        onClick={(e) => {
@@ -163,7 +160,7 @@ export const AccountManager = ({ onAccountSelect, selectedAccountId }) => {
                        }}
                        className="p-1.5 hover:bg-red-900/50 rounded transition-colors"
                      >
-                       <Trash2 size={16} className="text-red-400" />
+                       <Trash2 size={16} className="text-red-900" />
                      </button>
                     </div>
                   </div>

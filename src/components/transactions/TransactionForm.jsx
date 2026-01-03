@@ -122,7 +122,7 @@ export const TransactionForm = ({ transaction, onSuccess, onCancel, preselectedT
         value={formData.category}
         onChange={handleChange}
         required
-        className="text-sm dhivehi"
+        className="text-sm"
       >
         <option value="">Select a category</option>
         {availableCategories.map(cat => (
@@ -143,7 +143,7 @@ export const TransactionForm = ({ transaction, onSuccess, onCancel, preselectedT
 
       {/* Account Selection */}
       <div>
-        <label className="text-sm font-semibold text-gray-300 mb-2 block">
+        <label className="text-sm font-semibold text-gray-800 mb-2 block">
           Account
         </label>
         {accounts.length === 0 ? (
@@ -155,7 +155,7 @@ export const TransactionForm = ({ transaction, onSuccess, onCancel, preselectedT
             name="accountId"
             value={formData.accountId}
             onChange={handleChange}
-            className="w-full px-3 py-2 bg-gray-900 border border-gray-700 rounded-lg text-gray-100 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm"
+            className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 text-sm"
             required
           >
             <option value="">Select an account</option>

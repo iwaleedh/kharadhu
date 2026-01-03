@@ -57,18 +57,16 @@ export const Reports = () => {
     <div className="space-y-3 pb-4">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-lg font-bold text-gray-900">
-            <span className="dhivehi">ރިޕޯޓް</span> <span className="text-sm text-gray-600">Reports</span>
-          </h2>
-          <p className="text-xs text-gray-600"><span className="dhivehi">ފައިސާގެ ތަފްސީލް</span></p>
+          <h2 className="text-lg font-bold text-gray-900">Reports</h2>
+          <p className="text-xs text-gray-800">Financial Overview</p>
         </div>
         
         <div className="flex items-center space-x-1">
-          <Calendar size={16} className="text-gray-500" />
+          <Calendar size={16} className="text-gray-700" />
           <select
             value={selectedMonth}
             onChange={(e) => setSelectedMonth(Number(e.target.value))}
-            className="px-2 py-1.5 border border-gray-300 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-ocean-500"
+            className="px-2 py-1.5 border border-gray-300 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-orange-500"
           >
             <option value={0}>This Month</option>
             <option value={1}>Last Month</option>
@@ -80,50 +78,41 @@ export const Reports = () => {
 
       {/* Summary Cards */}
       <div className="grid grid-cols-1 gap-2">
-        <Card className="bg-gradient-to-br from-tropical-500 to-tropical-600 text-white border-0">
+        <Card className="bg-white border-2" style={{ borderColor: '#50C878' }}>
           <CardContent className="p-3">
             <div className="flex items-center justify-between mb-2">
-              <div>
-                <p className="text-tropical-100 text-xs font-medium dhivehi leading-tight">އާމްދަނީ</p>
-                <p className="text-tropical-200 text-[9px] leading-tight">Income</p>
-              </div>
-              <TrendingUp size={18} />
+              <p className="text-sm font-semibold" style={{ color: '#50C878' }}>Income</p>
+              <TrendingUp size={18} style={{ color: '#50C878' }} />
             </div>
-            <p className="text-2xl font-bold">{formatCurrency(stats.income)}</p>
-            <p className="text-tropical-100 text-xs mt-1">
-              {filteredTransactions.filter(t => t.type === 'credit').length} <span className="dhivehi">ހަރަދު</span>
+            <p className="text-2xl font-bold" style={{ color: '#50C878' }}>{formatCurrency(stats.income)}</p>
+            <p className="text-gray-800 text-xs mt-1">
+              {filteredTransactions.filter(t => t.type === 'credit').length} transactions
             </p>
           </CardContent>
         </Card>
 
-        <Card className="bg-gradient-to-br from-coral-500 to-coral-600 text-white border-0">
+        <Card className="bg-white border-2" style={{ borderColor: '#880808' }}>
           <CardContent className="p-3">
             <div className="flex items-center justify-between mb-2">
-              <div>
-                <p className="text-coral-100 text-xs font-medium dhivehi leading-tight">ހަރަދު</p>
-                <p className="text-coral-200 text-[9px] leading-tight">Expenses</p>
-              </div>
-              <TrendingDown size={18} />
+              <p className="text-sm font-semibold" style={{ color: '#880808' }}>Expenses</p>
+              <TrendingDown size={18} style={{ color: '#880808' }} />
             </div>
-            <p className="text-2xl font-bold">{formatCurrency(stats.expenses)}</p>
-            <p className="text-coral-100 text-xs mt-1">
-              {filteredTransactions.filter(t => t.type === 'debit').length} <span className="dhivehi">ހަރަދު</span>
+            <p className="text-2xl font-bold" style={{ color: '#880808' }}>{formatCurrency(stats.expenses)}</p>
+            <p className="text-gray-800 text-xs mt-1">
+              {filteredTransactions.filter(t => t.type === 'debit').length} transactions
             </p>
           </CardContent>
         </Card>
 
-        <Card className={`bg-gradient-to-br ${stats.net >= 0 ? 'from-ocean-500 to-ocean-600' : 'from-gray-500 to-gray-600'} text-white border-0`}>
+        <Card className={`bg-white border-2 ${stats.net >= 0 ? '' : 'border-gray-700'}`} style={stats.net >= 0 ? { borderColor: '#50C878' } : {}}>
           <CardContent className="p-3">
             <div className="flex items-center justify-between mb-2">
-              <div>
-                <p className="text-ocean-100 text-xs font-medium dhivehi leading-tight">ޖުމްލަ އާމްދަނީ</p>
-                <p className="text-ocean-200 text-[9px] leading-tight">Net Income</p>
-              </div>
-              {stats.net >= 0 ? <TrendingUp size={18} /> : <TrendingDown size={18} />}
+              <p className="text-sm font-semibold" style={{ color: stats.net >= 0 ? '#50C878' : '#6b7280' }}>Net Income</p>
+              {stats.net >= 0 ? <TrendingUp size={18} style={{ color: '#50C878' }} /> : <TrendingDown size={18} className="text-gray-800" />}
             </div>
-            <p className="text-2xl font-bold">{formatCurrency(Math.abs(stats.net))}</p>
-            <p className="text-ocean-100 text-xs mt-1">
-              <span className="dhivehi">{stats.net >= 0 ? 'އިތުރު' : 'ދަށް'}</span> <span className="text-[9px]">{stats.net >= 0 ? 'Surplus' : 'Deficit'}</span>
+            <p className="text-2xl font-bold" style={{ color: stats.net >= 0 ? '#50C878' : '#6b7280' }}>{formatCurrency(Math.abs(stats.net))}</p>
+            <p className="text-gray-800 text-xs mt-1">
+              {stats.net >= 0 ? 'Surplus' : 'Deficit'}
             </p>
           </CardContent>
         </Card>
@@ -135,10 +124,7 @@ export const Reports = () => {
       {/* Monthly Comparison */}
       <Card className="p-3">
         <CardHeader className="mb-2">
-          <CardTitle className="text-base">
-            <span className="dhivehi block leading-tight">6 މަސްދުވަހުގެ ގްރާފް</span>
-            <span className="text-[10px] text-gray-600 leading-tight">6-Month Trend</span>
-          </CardTitle>
+          <CardTitle className="text-base">6-Month Trend</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
           <ResponsiveContainer width="100%" height={220}>
@@ -148,8 +134,8 @@ export const Reports = () => {
               <YAxis style={{ fontSize: '11px' }} />
               <Tooltip formatter={(value) => formatCurrency(value)} />
               <Legend wrapperStyle={{ fontSize: '12px' }} />
-              <Bar dataKey="income" fill="#10B981" name="Income" />
-              <Bar dataKey="expenses" fill="#FF6B6B" name="Expenses" />
+              <Bar dataKey="income" fill="#50C878" name="Income" />
+              <Bar dataKey="expenses" fill="#880808" name="Expenses" />
             </BarChart>
           </ResponsiveContainer>
         </CardContent>
@@ -158,28 +144,25 @@ export const Reports = () => {
       {/* Top Categories */}
       <Card className="p-3">
         <CardHeader className="mb-2">
-          <CardTitle className="text-base">
-            <span className="dhivehi block leading-tight">އެންމެ ބޮޑަށް ހަރަދުވި ބައިތައް</span>
-            <span className="text-[10px] text-gray-600 leading-tight">Top Spending Categories</span>
-          </CardTitle>
+          <CardTitle className="text-base">Top Spending Categories</CardTitle>
         </CardHeader>
         <CardContent className="p-0">
           {categoryData.length === 0 ? (
-            <p className="text-center text-gray-500 py-8">No data available</p>
+            <p className="text-center text-gray-700 py-8">No data available</p>
           ) : (
             <div className="space-y-2">
               {categoryData.slice(0, 8).map((item, index) => (
-                <div key={item.category} className="flex items-center justify-between p-2 bg-gray-50 rounded-lg">
+                <div key={item.category} className="flex items-center justify-between p-2 bg-white rounded-lg">
                   <div className="flex items-center space-x-2 flex-1 min-w-0">
-                    <span className="text-lg font-bold text-gray-400">#{index + 1}</span>
+                    <span className="text-lg font-bold text-gray-700">#{index + 1}</span>
                     <div className="min-w-0">
                       <p className="font-semibold text-sm text-gray-900 truncate">{item.category}</p>
-                      <p className="text-xs text-gray-500">{item.count} transactions</p>
+                      <p className="text-xs text-gray-700">{item.count} transactions</p>
                     </div>
                   </div>
                   <div className="text-right ml-2 flex-shrink-0">
-                    <p className="font-bold text-sm text-coral-600">{formatCurrency(item.total)}</p>
-                    <p className="text-xs text-gray-500">
+                    <p className="font-bold text-sm #880808">{formatCurrency(item.total)}</p>
+                    <p className="text-xs text-gray-700">
                       {((item.total / stats.expenses) * 100).toFixed(1)}%
                     </p>
                   </div>
