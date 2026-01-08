@@ -458,18 +458,49 @@ export const Settings = () => {
       {/* Data Backup */}
       <DataBackup />
 
-      {/* Support */}
+      {/* Support & Feedback */}
       <Card>
         <CardHeader>
           <CardTitle>Support & Feedback</CardTitle>
         </CardHeader>
         <CardContent>
           <p className="text-base text-gray-800 mb-4">
-            Have questions or suggestions? We'd love to hear from you!
+            Have questions, suggestions, or found a bug? We'd love to hear from you!
           </p>
-          <div className="space-y-2 text-base">
-            <p className="text-gray-700"><strong className="text-gray-900">Email:</strong> support@expensetracker.mv</p>
-            <p className="text-gray-700"><strong className="text-gray-900">Version:</strong> 1.0.0 (2026)</p>
+          <div className="space-y-3">
+            <div className="p-3 bg-blue-50 rounded-lg">
+              <p className="text-sm text-blue-800 mb-2">
+                <strong>Developer Email:</strong>
+              </p>
+              <a
+                href="mailto:ink.in@hotmail.com?subject=Kharadhu App Feedback"
+                className="text-blue-600 hover:text-blue-800 font-medium"
+              >
+                ink.in@hotmail.com
+              </a>
+            </div>
+
+            <Button
+              variant="primary"
+              onClick={() => {
+                window.location.href = 'mailto:ink.in@hotmail.com?subject=Kharadhu App Feedback&body=Hi,%0A%0AI would like to share my feedback about the Kharadhu app:%0A%0A';
+              }}
+              className="w-full flex items-center justify-center space-x-2"
+            >
+              <span>📧</span>
+              <span>Send Feedback</span>
+            </Button>
+
+            <div className="border-t border-gray-200 pt-3 mt-3">
+              <div className="space-y-1 text-sm">
+                <p className="text-gray-700">
+                  <strong className="text-gray-900">Version:</strong> 1.0.0
+                </p>
+                <p className="text-gray-700">
+                  <strong className="text-gray-900">Released:</strong> January 2026
+                </p>
+              </div>
+            </div>
           </div>
         </CardContent>
       </Card>
