@@ -1,20 +1,51 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/kharadhu/icon.svg" />
-    <link rel="apple-touch-icon" href="/kharadhu/icon-192.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <meta name="description" content="Kharadhu - Personal expense tracker for Bank of Maldives (BML) and Maldives Islamic Bank (MIB)" />
-    <meta name="theme-color" content="#EA580C" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
-    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-    <meta name="apple-mobile-web-app-title" content="Kharadhu" />
-    <title>Kharadhu | Expense Tracker</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
-  </body>
-</html>
 
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/kharadhu/icon.svg" />
+  <link rel="apple-touch-icon" href="/kharadhu/icon-192.png" />
+  <meta name="viewport"
+    content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="description"
+    content="Kharadhu - Personal expense tracker for Bank of Maldives (BML) and Maldives Islamic Bank (MIB)" />
+  <meta name="theme-color" content="#EA580C" />
+
+  <!-- iOS PWA Configuration -->
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Kharadhu" />
+  <meta name="mobile-web-app-capable" content="yes" />
+
+  <!-- iOS Splash Screens (generated from icon) -->
+  <link rel="apple-touch-startup-image" href="/kharadhu/icon-512.png" />
+
+  <!-- Prevent phone number auto-detection -->
+  <meta name="format-detection" content="telephone=no" />
+
+  <title>Kharadhu | Expense Tracker</title>
+
+  <!-- Safe area padding for notched iPhones -->
+  <style>
+    :root {
+      --sat: env(safe-area-inset-top);
+      --sar: env(safe-area-inset-right);
+      --sab: env(safe-area-inset-bottom);
+      --sal: env(safe-area-inset-left);
+    }
+
+    body {
+      padding-top: var(--sat);
+      padding-bottom: var(--sab);
+      padding-left: var(--sal);
+      padding-right: var(--sar);
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script type="module" src="/src/main.jsx"></script>
+</body>
+
+</html>
