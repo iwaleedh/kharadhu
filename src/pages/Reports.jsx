@@ -6,13 +6,21 @@ import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, Responsive
 import { formatCurrency, getMonthRange, calculateTotalByType, groupByCategory } from '../lib/utils';
 import { Select } from '../components/ui/Input';
 import { TrendingUp, TrendingDown, Calendar } from 'lucide-react';
+import { MerchantAnalytics } from '../components/analytics/MerchantAnalytics';
+import { ExpenseComparison } from '../components/dashboard/ExpenseComparison';
+import { FinancialCalendar } from '../components/calendar/FinancialCalendar';
+import { SpendingTrends } from '../components/charts/SpendingTrends';
+import { CategoryTrends } from '../components/charts/CategoryTrends';
+import { IncomeVsExpense } from '../components/analytics/IncomeVsExpense';
+import { PaymentMethods } from '../components/analytics/PaymentMethods';
+import { YearComparison } from '../components/analytics/YearComparison';
 
 export const Reports = () => {
-  const { transactions } = useTransactionStore();
+  const { transactions, categories } = useTransactionStore();
   const [selectedMonth, setSelectedMonth] = useState(0); // 0 = current month
 
   const monthRange = getMonthRange(selectedMonth);
-  
+
   const filteredTransactions = useMemo(() => {
     return transactions.filter(t => {
       const tDate = new Date(t.date);
@@ -40,10 +48,10 @@ export const Reports = () => {
         const tDate = new Date(t.date);
         return tDate >= new Date(range.start) && tDate <= new Date(range.end);
       });
-      
+
       const income = calculateTotalByType(monthTransactions, 'credit');
       const expenses = calculateTotalByType(monthTransactions, 'debit');
-      
+
       data.push({
         month: new Date(range.start).toLocaleDateString('en-US', { month: 'short' }),
         income,
@@ -60,7 +68,7 @@ export const Reports = () => {
           <h2 className="text-lg font-bold text-gray-900">Reports</h2>
           <p className="text-xs text-gray-800">Financial Overview</p>
         </div>
-        
+
         <div className="flex items-center space-x-1">
           <Calendar size={16} className="text-gray-700" />
           <select
@@ -172,6 +180,31 @@ export const Reports = () => {
           )}
         </CardContent>
       </Card>
+
+      {/* Merchant Analytics */}
+      <MerchantAnalytics />
+
+      {/* Income vs Expense */}
+      <IncomeVsExpense transactions={transactions} />
+
+      {/* Spending Trends */}
+      <SpendingTrends transactions={transactions} />
+
+      {/* Category Trends */}
+      <CategoryTrends transactions={transactions} categories={categories} />
+
+      {/* Payment Methods */}
+      <PaymentMethods transactions={transactions} />
+
+      {/* Year Comparison */}
+      <YearComparison transactions={transactions} />
+
+      {/* Expense Comparison */}
+      <ExpenseComparison transactions={transactions} />
+
+      {/* Financial Calendar */}
+      <FinancialCalendar transactions={transactions} />
     </div>
   );
 };
+

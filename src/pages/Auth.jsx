@@ -21,20 +21,20 @@ export const Auth = () => {
   }, [init]);
 
   const canSignIn = useMemo(() => selectedUserId && pin.trim().length >= 4, [selectedUserId, pin]);
-  const [cooldownText, setCooldownText] = useState('');
+  const [now, setNow] = useState(() => Date.now());
 
   useEffect(() => {
-    if (!nextAllowedSignInAt) { setCooldownText(''); return; }
-    const tick = () => {
-      const now = Date.now();
-      const ms = nextAllowedSignInAt - now;
-      if (ms <= 0) { setCooldownText(''); return; }
-      setCooldownText(`${Math.ceil(ms/1000)}s`);
-    };
-    tick();
-    const id = setInterval(tick, 500);
+    if (!nextAllowedSignInAt) return;
+    const id = setInterval(() => setNow(Date.now()), 500);
     return () => clearInterval(id);
   }, [nextAllowedSignInAt]);
+
+  const cooldownText = useMemo(() => {
+    if (!nextAllowedSignInAt) return '';
+    const ms = nextAllowedSignInAt - now;
+    if (ms <= 0) return '';
+    return `${Math.ceil(ms / 1000)}s`;
+  }, [nextAllowedSignInAt, now]);
   const canSignUp = useMemo(() => name.trim() && pin2.trim().length >= 4, [name, pin2]);
 
   return (

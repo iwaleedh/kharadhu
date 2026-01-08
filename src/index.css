@@ -3,7 +3,7 @@
 @font-face {
   font-family: 'Faruma';
   src: url('/fonts/Faruma.woff2') format('woff2'),
-       url('/fonts/Faruma.ttf') format('truetype');
+    url('/fonts/Faruma.ttf') format('truetype');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -14,23 +14,25 @@
 @font-face {
   font-family: 'Faruma';
   src: url('/fonts/Faruma.woff2') format('woff2'),
-       url('/fonts/Faruma.ttf') format('truetype');
+    url('/fonts/Faruma.ttf') format('truetype');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
 }
+
 @font-face {
   font-family: 'Faruma';
   src: url('/fonts/Faruma.woff2') format('woff2'),
-       url('/fonts/Faruma.ttf') format('truetype');
+    url('/fonts/Faruma.ttf') format('truetype');
   font-weight: 600;
   font-style: normal;
   font-display: swap;
 }
+
 @font-face {
   font-family: 'Faruma';
   src: url('/fonts/Faruma.woff2') format('woff2'),
-       url('/fonts/Faruma.ttf') format('truetype');
+    url('/fonts/Faruma.ttf') format('truetype');
   font-weight: 700;
   font-style: normal;
   font-display: swap;
@@ -42,7 +44,7 @@
   --color-dark-surface: #141414;
   --color-dark-card: #1a1a1a;
   --color-dark-elevated: #1f1f1f;
-  
+
   /* Red theme for expenses */
   --color-red-50: #1a0a0a;
   --color-red-100: #2d0f0f;
@@ -54,7 +56,7 @@
   --color-red-700: #f87171;
   --color-red-800: #fca5a5;
   --color-red-900: #fee2e2;
-  
+
   /* Green theme for income */
   --color-green-50: #0a1a0a;
   --color-green-100: #0f2d0f;
@@ -66,7 +68,7 @@
   --color-green-700: #86efac;
   --color-green-800: #bbf7d0;
   --color-green-900: #dcfce7;
-  
+
   /* Neutral grays for text */
   --color-gray-50: #fafafa;
   --color-gray-100: #f5f5f5;
@@ -78,7 +80,7 @@
   --color-gray-700: #404040;
   --color-gray-800: #262626;
   --color-gray-900: #171717;
-  
+
   /* Keep some ocean colors for branding */
   --color-ocean-600: #0066CC;
   --color-ocean-700: #1d4ed8;
@@ -89,8 +91,8 @@
     -webkit-tap-highlight-color: transparent;
     transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
   }
-  
-  /* Mint-inspired light theme with warm tones */
+
+  /* Default light theme */
   body {
     background: linear-gradient(135deg, #fafaf9 0%, #fef3f2 100%);
     @apply text-gray-900 antialiased;
@@ -100,106 +102,188 @@
     font-family: system-ui, -apple-system, sans-serif;
     min-height: 100vh;
   }
-  
+
+  /* Dark theme - deep charcoal with subtle red tint */
   .theme-dark body {
-    background: linear-gradient(135deg, #fafaf9 0%, #fef3f2 100%);
-    @apply text-gray-900 antialiased;
+    background: linear-gradient(135deg, #0a0a0a 0%, #1a0f0f 100%);
+    @apply text-gray-100 antialiased;
   }
-  
+
+  /* Light theme - warm cream/white */
   .theme-light body {
     background: linear-gradient(135deg, #ffffff 0%, #fef8f5 100%);
     @apply text-gray-900 antialiased;
   }
-  
-  input, textarea, select, button {
-    font-size: 16px; /* Prevents zoom on iOS */
+
+  input,
+  textarea,
+  select,
+  button {
+    font-size: 16px;
+    /* Prevents zoom on iOS */
   }
 }
 
 @layer components {
+
   /* Light theme overrides */
   .theme-light header,
   .theme-light nav {
     @apply bg-white/90 border-gray-200;
     backdrop-filter: blur(12px);
   }
+
   .theme-light .card {
     background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
     @apply border border-gray-200;
   }
+
   .theme-light .card * {
     color: #111827 !important;
   }
+
   .theme-light .btn-secondary {
     @apply bg-gray-100 text-gray-900 border border-gray-200;
   }
+
   .theme-light input,
   .theme-light textarea,
   .theme-light select {
     @apply bg-white border-gray-300 text-gray-900;
   }
-  .theme-light .text-gray-100 { color: #111827 !important; }
-  .theme-light .text-gray-200 { color: #1f2937 !important; }
-  .theme-light .text-gray-300 { color: #374151 !important; }
-  .theme-light .text-gray-400 { color: #4b5563 !important; }
+
+  .theme-light .text-gray-100 {
+    color: #111827 !important;
+  }
+
+  .theme-light .text-gray-200 {
+    color: #1f2937 !important;
+  }
+
+  .theme-light .text-gray-300 {
+    color: #374151 !important;
+  }
+
+  .theme-light .text-gray-400 {
+    color: #4b5563 !important;
+  }
+
+  /* Dark theme overrides */
+  .theme-dark header,
+  .theme-dark nav {
+    @apply bg-gray-900/90 border-gray-800;
+    backdrop-filter: blur(12px);
+  }
+
+  .theme-dark .card {
+    background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%);
+    @apply border border-gray-800;
+  }
+
+  .theme-dark .card * {
+    color: #f5f5f5 !important;
+  }
+
+  .theme-dark .card .text-red-600,
+  .theme-dark .card .text-emerald-500 {
+    color: inherit !important;
+  }
+
+  .theme-dark .btn-secondary {
+    @apply bg-gray-800 text-gray-100 border border-gray-700;
+  }
+
+  .theme-dark input,
+  .theme-dark textarea,
+  .theme-dark select {
+    @apply bg-gray-800 border-gray-700 text-gray-100;
+  }
+
+  .theme-dark input::placeholder,
+  .theme-dark textarea::placeholder {
+    color: #9ca3af;
+  }
+
+  .theme-dark .text-gray-900 {
+    color: #f9fafb !important;
+  }
+
+  .theme-dark .text-gray-800 {
+    color: #f5f5f5 !important;
+  }
+
+  .theme-dark .text-gray-700 {
+    color: #e5e5e5 !important;
+  }
+
+  .theme-dark .text-gray-600 {
+    color: #d4d4d4 !important;
+  }
 
   .btn-primary {
     background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
     @apply hover:shadow-lg hover:shadow-red-500/50 active:scale-95 text-white font-semibold py-2 px-4 rounded-lg transition-all duration-300;
   }
-  
+
   .btn-secondary {
     @apply bg-dark-elevated hover:bg-gray-700 active:bg-gray-600 text-gray-100 font-semibold py-2 px-4 rounded-lg transition-all duration-300;
   }
-  
+
   .card {
     background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%);
     @apply rounded-xl shadow-lg border border-gray-800 p-4 hover:border-gray-700 transition-all duration-300;
   }
-  
+
   .stat-card {
     background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
     @apply text-white rounded-xl p-6 shadow-2xl shadow-red-900/50 hover:shadow-red-800/60 transition-all duration-300;
   }
-  
+
   .safe-area-bottom {
     padding-bottom: env(safe-area-inset-bottom);
   }
-  
+
   /* Smooth animations */
   .fade-in {
     animation: fadeIn 0.4s ease-in;
   }
-  
+
   .slide-up {
     animation: slideUp 0.4s ease-out;
   }
-  
+
   .scale-in {
     animation: scaleIn 0.3s ease-out;
   }
-  
+
   @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+      opacity: 0;
+    }
+
+    to {
+      opacity: 1;
+    }
   }
-  
+
   @keyframes slideUp {
     from {
       opacity: 0;
       transform: translateY(20px);
     }
+
     to {
       opacity: 1;
       transform: translateY(0);
     }
   }
-  
+
   @keyframes scaleIn {
     from {
       opacity: 0;
       transform: scale(0.95);
     }
+
     to {
       opacity: 1;
       transform: scale(1);
@@ -207,11 +291,27 @@
   }
 
   @keyframes shakeX {
-    0%, 100% { transform: translateX(0); }
-    20% { transform: translateX(-6px); }
-    40% { transform: translateX(6px); }
-    60% { transform: translateX(-4px); }
-    80% { transform: translateX(4px); }
+
+    0%,
+    100% {
+      transform: translateX(0);
+    }
+
+    20% {
+      transform: translateX(-6px);
+    }
+
+    40% {
+      transform: translateX(6px);
+    }
+
+    60% {
+      transform: translateX(-4px);
+    }
+
+    80% {
+      transform: translateX(4px);
+    }
   }
 }
 

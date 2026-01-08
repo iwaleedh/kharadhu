@@ -1,4 +1,4 @@
-import { formatDate } from './utils';
+// CSV Import utilities for Kharadhu
 
 // Minimal CSV parser for our exported CSV (comma-separated, no quoted commas support)
 const parseCsv = (text) => {

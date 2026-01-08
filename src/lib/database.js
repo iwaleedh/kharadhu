@@ -86,7 +86,7 @@ db.version(4)
     const users = await tx.table('users').toArray();
     for (const user of users) {
       const userAccounts = await tx.table('accounts').where('userId').equals(user.id).toArray();
-      
+
       if (userAccounts.length === 0) {
         // Create default account
         const defaultAccountId = await tx.table('accounts').add({
@@ -125,6 +125,31 @@ db.version(4)
         }
       }
     }
+  });
+
+// v5: Add budgets and reminders tables
+db.version(5)
+  .stores({
+    users: '++id, nameLower, createdAt, lastLoginAt',
+    transactions: '++id, userId, accountId, date, type, amount, category, bank, accountNumber, merchant',
+    categories: '++id, userId, name, type',
+    accounts: '++id, userId, bankName, accountNumber, nickname, isPrimary',
+    budgets: '++id, userId, category, month, year',
+    reminders: '++id, userId, title, dueDate, isRecurring, isActive',
+    settings: 'key'
+  });
+
+// v6: Add recurring transactions table
+db.version(6)
+  .stores({
+    users: '++id, nameLower, createdAt, lastLoginAt',
+    transactions: '++id, userId, accountId, date, type, amount, category, bank, accountNumber, merchant',
+    categories: '++id, userId, name, type',
+    accounts: '++id, userId, bankName, accountNumber, nickname, isPrimary',
+    budgets: '++id, userId, category, month, year',
+    reminders: '++id, userId, title, dueDate, isRecurring, isActive',
+    recurringTransactions: '++id, userId, title, amount, frequency, nextDueDate, isActive',
+    settings: 'key'
   });
 
 // Default categories
@@ -207,30 +232,30 @@ export const deleteTransaction = async (userId, id) => {
 
 export const getTransactions = async (userId, filters = {}) => {
   if (!userId) return [];
-  
+
   // Get all transactions for user, then sort in JavaScript
   let transactions = await db.transactions.where('userId').equals(userId).toArray();
-  
+
   // Sort by date (newest first)
   transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
-  
+
   // Apply filters
   if (filters.startDate && filters.endDate) {
     transactions = transactions.filter(t => t.date >= filters.startDate && t.date <= filters.endDate);
   }
-  
+
   if (filters.type) {
     transactions = transactions.filter(t => t.type === filters.type);
   }
-  
+
   if (filters.category) {
     transactions = transactions.filter(t => t.category === filters.category);
   }
-  
+
   if (filters.bank) {
     transactions = transactions.filter(t => t.bank === filters.bank);
   }
-  
+
   return transactions;
 };
 
@@ -250,23 +275,23 @@ export const addCategory = async (userId, category) => {
 
 export const updateCategory = async (userId, categoryId, updates) => {
   if (!userId) throw new Error('Missing userId');
-  
+
   const existing = await db.categories.get(categoryId);
   if (!existing || existing.userId !== userId) {
     throw new Error('Category not found');
   }
-  
+
   return await db.categories.update(categoryId, updates);
 };
 
 export const deleteCategory = async (userId, categoryId) => {
   if (!userId) throw new Error('Missing userId');
-  
+
   const existing = await db.categories.get(categoryId);
   if (!existing || existing.userId !== userId) {
     return; // Idempotent delete
   }
-  
+
   return await db.categories.delete(categoryId);
 };
 
@@ -278,16 +303,16 @@ export const getAccounts = async (userId) => {
 
 export const addAccount = async (userId, account) => {
   if (!userId) throw new Error('Missing userId');
-  
+
   // If this is the first account, make it primary
   const existingAccounts = await getAccounts(userId);
   const isPrimary = existingAccounts.length === 0 ? true : (account.isPrimary || false);
-  
+
   // If setting as primary, unset other primary accounts
   if (isPrimary) {
     await db.accounts.where('userId').equals(userId).modify({ isPrimary: false });
   }
-  
+
   return await db.accounts.add({
     ...account,
     userId,
@@ -299,17 +324,17 @@ export const addAccount = async (userId, account) => {
 
 export const updateAccount = async (userId, accountId, updates) => {
   if (!userId) throw new Error('Missing userId');
-  
+
   const existing = await db.accounts.get(accountId);
   if (!existing || existing.userId !== userId) {
     throw new Error('Account not found');
   }
-  
+
   // If setting as primary, unset other primary accounts
   if (updates.isPrimary) {
     await db.accounts.where('userId').equals(userId).modify({ isPrimary: false });
   }
-  
+
   return await db.accounts.update(accountId, {
     ...updates,
     updatedAt: new Date().toISOString(),
@@ -318,18 +343,18 @@ export const updateAccount = async (userId, accountId, updates) => {
 
 export const deleteAccount = async (userId, accountId) => {
   if (!userId) throw new Error('Missing userId');
-  
+
   const existing = await db.accounts.get(accountId);
   if (!existing || existing.userId !== userId) {
     return; // Idempotent delete
   }
-  
+
   // Don't allow deleting if transactions exist for this account
   const transactionCount = await db.transactions.where({ userId, accountId }).count();
   if (transactionCount > 0) {
     throw new Error('Cannot delete account with existing transactions');
   }
-  
+
   return await db.accounts.delete(accountId);
 };
 
@@ -344,27 +369,27 @@ export const updateAccountBalance = async (userId, accountNumber, balance) => {
 // Calculate account balance from transactions
 export const calculateAccountBalance = async (userId, accountId) => {
   if (!userId || !accountId) return 0;
-  
+
   const account = await db.accounts.get(accountId);
   if (!account || account.userId !== userId) return 0;
-  
+
   const transactions = await db.transactions.where({ userId, accountId }).toArray();
-  
+
   const income = transactions
     .filter(t => t.type === 'credit')
     .reduce((sum, t) => sum + (t.amount || 0), 0);
-  
+
   const expenses = transactions
     .filter(t => t.type === 'debit')
     .reduce((sum, t) => sum + (t.amount || 0), 0);
-  
+
   return (account.startingBalance || 0) + income - expenses;
 };
 
 // Get account balances for all user accounts
 export const getAccountBalances = async (userId) => {
   if (!userId) return [];
-  
+
   const accounts = await getAccounts(userId);
   const balances = await Promise.all(
     accounts.map(async (account) => {
@@ -375,6 +400,6 @@ export const getAccountBalances = async (userId) => {
       };
     })
   );
-  
+
   return balances;
 };

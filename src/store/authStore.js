@@ -289,9 +289,7 @@ export const useAuthStore = create((set, get) => ({
       // Create a default account when starting balance is set
       const existingAccounts = await db.accounts.where('userId').equals(id).toArray();
       if (existingAccounts.length === 0) {
-        const accountId = generateId();
         await db.accounts.add({
-          id: accountId,
           userId: id,
           bankName: 'Bank Account',
           accountNumber: cleanAccountNumber,

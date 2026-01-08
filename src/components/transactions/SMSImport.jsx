@@ -4,7 +4,7 @@ import { Button } from '../ui/Button';
 import { TextArea, Input } from '../ui/Input';
 import { Card, CardHeader, CardTitle, CardContent } from '../ui/Card';
 import { parseSMS } from '../../lib/smsParser';
-import { formatCurrency, formatDate } from '../../lib/utils';
+import { formatCurrency } from '../../lib/utils';
 import { getAccounts, getCategories } from '../../lib/database';
 import { getCurrentUserId } from '../../lib/currentUser';
 
@@ -41,7 +41,7 @@ export const SMSImport = ({ onImport, onCancel, initialText = '', autoParse = fa
   const handleParse = () => {
     setError('');
     setParsedData(null);
-    
+
     if (!smsText.trim()) {
       setError('Please paste an SMS message');
       return;
@@ -49,7 +49,7 @@ export const SMSImport = ({ onImport, onCancel, initialText = '', autoParse = fa
 
     try {
       const result = parseSMS(smsText);
-      
+
       // Try to find matching account
       let accountId = null;
       if (result.accountNumber && result.bank) {
@@ -70,13 +70,13 @@ export const SMSImport = ({ onImport, onCancel, initialText = '', autoParse = fa
           }
         }
       }
-      
+
       // Add accountId to parsed data
       setParsedData({ ...result, accountId });
-      
+
       // Set initial category from parsed data
       setSelectedCategory(result.category || '');
-      
+
       // Show warning if no account matched
       if (!accountId && accounts.length > 0) {
         setError('Warning: Could not match account. Using default account.');
@@ -187,7 +187,7 @@ export const SMSImport = ({ onImport, onCancel, initialText = '', autoParse = fa
 
   const handleImport = async () => {
     if (!parsedData) return;
-    
+
     setLoading(true);
     try {
       await onImport(parsedData);
@@ -222,10 +222,10 @@ export const SMSImport = ({ onImport, onCancel, initialText = '', autoParse = fa
             error={error}
             className="text-sm"
           />
-          
+
           <div className="flex space-x-2 mt-3">
-            <Button 
-              variant="primary" 
+            <Button
+              variant="primary"
               onClick={handleParse}
               disabled={!smsText.trim()}
               className="flex-1 text-sm"
@@ -263,7 +263,7 @@ export const SMSImport = ({ onImport, onCancel, initialText = '', autoParse = fa
                     <option value="income">Income</option>
                   </select>
                 </div>
-                
+
                 <div>
                   <p className="text-xs text-gray-700 mb-1">Amount</p>
                   <Input
@@ -274,7 +274,7 @@ export const SMSImport = ({ onImport, onCancel, initialText = '', autoParse = fa
                     onChange={(e) => handleFieldChange('amount', Number(e.target.value))}
                   />
                 </div>
-                
+
                 <div>
                   <p className="text-xs text-gray-700 mb-1">Bank</p>
                   <select
@@ -287,7 +287,7 @@ export const SMSImport = ({ onImport, onCancel, initialText = '', autoParse = fa
                     ))}
                   </select>
                 </div>
-                
+
                 <div>
                   <p className="text-xs text-gray-700 mb-1">Account</p>
                   <select
@@ -303,7 +303,7 @@ export const SMSImport = ({ onImport, onCancel, initialText = '', autoParse = fa
                     ))}
                   </select>
                 </div>
-                
+
                 <div>
                   <p className="text-xs text-gray-700 mb-1">From / Merchant</p>
                   <Input
@@ -313,7 +313,7 @@ export const SMSImport = ({ onImport, onCancel, initialText = '', autoParse = fa
                     placeholder="e.g., Fund Transfer"
                   />
                 </div>
-                
+
                 <div className="col-span-2">
                   <p className="text-xs text-gray-700 mb-1">Category</p>
                   <select
@@ -338,7 +338,7 @@ export const SMSImport = ({ onImport, onCancel, initialText = '', autoParse = fa
                     Auto-detected: {parsedData.category || 'None'}. You can change it above.
                   </p>
                 </div>
-                
+
                 <div>
                   <p className="text-xs text-gray-700 mb-1">Date / Time</p>
                   <Input
@@ -352,7 +352,7 @@ export const SMSImport = ({ onImport, onCancel, initialText = '', autoParse = fa
                     }}
                   />
                 </div>
-                
+
                 <div>
                   <p className="text-xs text-gray-700 mb-1">Reference No.</p>
                   <Input
@@ -362,13 +362,13 @@ export const SMSImport = ({ onImport, onCancel, initialText = '', autoParse = fa
                     placeholder="e.g., 122836305-67052491"
                   />
                 </div>
-                
+
                 <div>
                   <p className="text-xs text-gray-700 mb-1">Balance (from SMS)</p>
                   <p className="font-semibold">{formatCurrency(parsedData.balance || 0)}</p>
                 </div>
               </div>
-              
+
               <div className="pt-4 border-t border-gray-200 space-y-2">
                 <div>
                   <p className="text-xs text-gray-700 mb-1">Notes / Description (optional)</p>
@@ -380,8 +380,8 @@ export const SMSImport = ({ onImport, onCancel, initialText = '', autoParse = fa
                   />
                 </div>
 
-                <Button 
-                  variant="success" 
+                <Button
+                  variant="success"
                   onClick={handleImport}
                   disabled={loading || !selectedCategory || !parsedData?.amount}
                   className="w-full"

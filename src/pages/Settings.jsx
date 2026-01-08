@@ -13,6 +13,11 @@ import { ThemePreference } from '../components/settings/ThemePreference';
 import { getSecuritySettings, updateSecuritySettings } from '../lib/securitySettings';
 import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { CategoryManager } from '../components/categories/CategoryManager';
+import { BudgetManager } from '../components/budgets/BudgetManager';
+import { ReminderManager } from '../components/reminders/ReminderManager';
+import { RecurringManager } from '../components/recurring/RecurringManager';
+import { CurrencyConverter } from '../components/tools/CurrencyConverter';
+import { DataBackup } from '../components/settings/DataBackup';
 import { useEffect, useState } from 'react';
 
 export const Settings = () => {
@@ -210,6 +215,15 @@ export const Settings = () => {
       {/* Category Management */}
       <CategoryManager />
 
+      {/* Budget Tracking */}
+      <BudgetManager />
+
+      {/* Bill Reminders */}
+      <ReminderManager />
+
+      {/* Recurring Transactions */}
+      <RecurringManager />
+
       {/* App Info */}
       <Card>
         <CardHeader>
@@ -395,7 +409,7 @@ export const Settings = () => {
                 </div>
               </CardContent>
             </Card>
-            
+
             <Button
               variant="danger"
               onClick={handleClearData}
@@ -437,6 +451,12 @@ export const Settings = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Currency Converter */}
+      <CurrencyConverter />
+
+      {/* Data Backup */}
+      <DataBackup />
 
       {/* Support */}
       <Card>

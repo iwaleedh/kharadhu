@@ -20,15 +20,17 @@ export const TransactionForm = ({ transaction, onSuccess, onCancel, preselectedT
     description: '',
   });
 
-  // Load accounts
+  // Load accounts - only on mount (intentionally empty deps)
   useEffect(() => {
     const loadAccounts = async () => {
       const userId = getCurrentUserId();
       if (userId) {
         const userAccounts = await getAccounts(Number(userId));
         setAccounts(userAccounts);
-        
+
         // Auto-select primary account if no account selected
+        // Note: We check formData.accountId but don't add it to deps
+        // because we only want this to run once on mount
         if (!formData.accountId && userAccounts.length > 0) {
           const primaryAccount = userAccounts.find(acc => acc.isPrimary) || userAccounts[0];
           setFormData(prev => ({
@@ -41,11 +43,12 @@ export const TransactionForm = ({ transaction, onSuccess, onCancel, preselectedT
       }
     };
     loadAccounts();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    
+
     // If account selection changes, update bank and accountNumber too
     if (name === 'accountId') {
       const selectedAccount = accounts.find(acc => acc.id === Number(value));
@@ -59,19 +62,19 @@ export const TransactionForm = ({ transaction, onSuccess, onCancel, preselectedT
         return;
       }
     }
-    
+
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    
+
     const transactionData = {
       ...formData,
       amount: parseFloat(formData.amount),
       date: new Date(formData.date).toISOString(),
     };
-    
+
     onSuccess(transactionData);
   };
 
@@ -93,7 +96,7 @@ export const TransactionForm = ({ transaction, onSuccess, onCancel, preselectedT
           ]}
           className="text-sm"
         />
-        
+
         <Input
           label="Amount (MVR)"
           name="amount"

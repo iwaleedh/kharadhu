@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Card, CardHeader, CardTitle, CardContent } from '../ui/Card';
 import { Button } from '../ui/Button';
 import { Plus, Edit2, Trash2 } from 'lucide-react';
@@ -8,8 +8,6 @@ import { EditCategoryModal } from './EditCategoryModal';
 import { ConfirmDialog } from '../ui/ConfirmDialog';
 import { deleteCategory } from '../../lib/database';
 import { getCurrentUserId } from '../../lib/currentUser';
-import { cn } from '../../lib/utils';
-
 export const CategoryManager = () => {
   const { categories, init } = useTransactionStore();
   const [showAddModal, setShowAddModal] = useState(false);

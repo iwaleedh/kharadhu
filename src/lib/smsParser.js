@@ -13,7 +13,7 @@ const bankParsers = {
       reference: /Reference\s+No:(\d+)/i,
       approval: /Approval\s+Code:(\d+)/i,
       account: /from\s+(\d{4})/i,
-      
+
       // Old BML format support
       debit: /debited\s+MVR\s+([\d,]+\.?\d*)/i,
       credit: /credited\s+MVR\s+([\d,]+\.?\d*)/i,
@@ -30,21 +30,21 @@ const bankParsers = {
       // Supports both: "for 38.08 MVR" and "for MVR 110.00"
       amount: /for\s+(?:MVR\s*)?([\d,]+\.?\d*)\s*(?:MVR)?/i,
       merchant: /at\s+([A-Z0-9\s,]+?)(?:\s+on\s+\d{2}\.\d{2}\.\d{2})/i,
-      
+
       // Date patterns for different formats
       date: /on\s+(\d{2}\.\d{2}\.\d{2})\s+(\d{2}:\d{2})/i,
       dateLong: /on\s+(\d{2}\/\d{2}\/\d{4})\s+(\d{2}:\d{2}:\d{2})/i, // Favara: 02/01/2026 12:32:38
       time: /on\s+\d{2}\.\d{2}\.\d{2}\s+(\d{2}:\d{2})/i,
       timeLong: /on\s+\d{2}\/\d{2}\/\d{4}\s+(\d{2}:\d{2}:\d{2})/i,
-      
+
       // Account patterns
       account: /from\s+\*+(\d{4,5})/i, // Support both ***7894 and ***72100
       accountLong: /account\s+(\d+\*+\d+)/i, // Favara: 99010***72100
-      
+
       // Reference and approval
       approval: /Approval Code:\s*(\d+)/i,
       reference: /Ref\.\s*no\.\s*([\d-]+)/i, // Favara: 734074219-767178523
-      
+
       // Old MIB format support
       debit: /Debit\s+of\s+MVR\s+([\d,]+\.?\d*)/i,
       credit: /Credit\s+of\s+MVR\s+([\d,]+\.?\d*)/i,
@@ -153,16 +153,16 @@ const parseDate = (dateStr, bank, timeStr = null) => {
 // Categorize based on merchant name
 const categorizeTransaction = (merchant) => {
   if (!merchant) return 'Other';
-  
+
   const merchantUpper = merchant.trim().toUpperCase();
-  
+
   // Check exact matches
   for (const [key, category] of Object.entries(merchantCategories)) {
     if (merchantUpper.includes(key)) {
       return category;
     }
   }
-  
+
   // Default category
   return 'Other';
 };
@@ -206,7 +206,7 @@ export const parseSMS = (smsText) => {
 
   // Determine transaction type and amount
   let type, amount;
-  
+
   // New BML format (Transaction from...)
   if (amountMatch && smsText.includes('Transaction from')) {
     type = 'debit'; // Transactions are usually expenses
@@ -244,7 +244,7 @@ export const parseSMS = (smsText) => {
   }
 
   let merchant = merchantMatch ? merchantMatch[1].trim() : '';
-  
+
   // For Transfer messages, set a consistent merchant label
   if (smsText.includes('Favara Transfer')) {
     merchant = 'Money Transfer';
@@ -252,16 +252,16 @@ export const parseSMS = (smsText) => {
   if (smsText.includes('Fund Transfer')) {
     merchant = 'Fund Transfer';
   }
-  
+
   // Clean up merchant name (remove country codes, extra spaces)
   merchant = merchant.replace(/,\s*MV\s*$/i, '').trim(); // Remove ", MV" suffix
-  
+
   // Force category for transfers
   const category = smsText.includes('Fund Transfer') || smsText.includes('Favara Transfer')
     ? 'Transfer'
     : categorizeTransaction(merchant);
   const balance = balanceMatch ? parseAmount(balanceMatch[1]) : null;
-  
+
   // Get account number
   // - Short format (***7894) -> last4
   // - Long format (99010***72100) -> keep raw, derive last4
@@ -270,7 +270,7 @@ export const parseSMS = (smsText) => {
   if (accountNumber) {
     accountNumberRaw = accountNumber;
   }
-  if (!accountNumber && accountLongMatch) {
+  if (!accountNumber && accountLongMatch && accountLongMatch[1]) {
     accountNumberRaw = accountLongMatch[1]; // e.g., "99010***72100"
     const last4 = accountNumberRaw.match(/(\d{4})\s*$/);
     accountNumber = last4 ? last4[1] : accountNumberRaw;
@@ -278,11 +278,11 @@ export const parseSMS = (smsText) => {
 
   const referenceNumber = referenceMatch ? referenceMatch[1] : null;
   const approvalCode = approvalMatch ? approvalMatch[1] : null;
-  
+
   // Parse date with time - prefer long format for Favara Transfer
   let timeStr = timeMatch ? timeMatch[1] : null;
   let dateStr = dateMatch ? dateMatch[1] : null;
-  
+
   if (dateLongMatch) {
     dateStr = dateLongMatch[1];
     timeStr = dateLongMatch[2];
@@ -290,7 +290,7 @@ export const parseSMS = (smsText) => {
   if (timeLongMatch && !timeStr) {
     timeStr = timeLongMatch[1];
   }
-  
+
   const date = dateStr ? parseDate(dateStr, bank, timeStr) : new Date().toISOString();
 
   // Build description with reference number

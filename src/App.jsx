@@ -22,6 +22,7 @@ import { Auth } from './pages/Auth';
 import { useAuthStore } from './store/authStore';
 import { StartingBalanceModal } from './components/auth/StartingBalanceModal';
 import { getSecuritySettings } from './lib/securitySettings';
+import { QuickAddWidget } from './components/widgets/QuickAddWidget';
 
 function App() {
   const [activeTab, setActiveTab] = useState('dashboard');
@@ -32,7 +33,6 @@ function App() {
   const [batchSmsText, setBatchSmsText] = useState('');
   const { init, addTransaction } = useTransactionStore();
   const { currentUserId, currentUser, setStartingBalance, signOut, loading: authLoading, error: authError, init: initAuth } = useAuthStore();
-  const [showStartingBalance, setShowStartingBalance] = useState(false);
   // Inactivity lock (auto sign-out)
   useEffect(() => {
     const { idleTimeoutMinutes } = getSecuritySettings();
@@ -60,7 +60,7 @@ function App() {
       document.removeEventListener('visibilitychange', resetTimer);
     };
   }, [currentUserId, signOut]);
-  
+
   // Auto-import hook
   const {
     showImportPopup,
@@ -77,15 +77,6 @@ function App() {
     // Re-load user-scoped data when account changes.
     init();
   }, [init, currentUserId]);
-
-  useEffect(() => {
-    // Check if user needs to set starting balance
-    if (currentUser && (currentUser.startingBalance === null || currentUser.startingBalance === undefined)) {
-      setShowStartingBalance(true);
-    } else {
-      setShowStartingBalance(false);
-    }
-  }, [currentUser]);
 
   const handleAddClick = () => {
     setShowAddModal(true);
@@ -153,8 +144,8 @@ function App() {
   const renderContent = () => {
     switch (activeTab) {
       case 'dashboard':
-        return <Dashboard 
-          onViewTransactions={() => setActiveTab('transactions')} 
+        return <Dashboard
+          onViewTransactions={() => setActiveTab('transactions')}
           onAddIncome={handleAddIncome}
           onAddExpense={handleAddExpense}
         />;
@@ -180,180 +171,180 @@ function App() {
   }
 
   const handleSetStartingBalance = async (balance, accountNumber) => {
-    const success = await setStartingBalance({ userId: currentUserId, balance, accountNumber });
-    if (success) {
-      setShowStartingBalance(false);
-    }
+    await setStartingBalance({ userId: currentUserId, balance, accountNumber });
   };
 
   return (
     <ThemeProvider>
       <div className="min-h-screen">
         <Header />
-      
-      {/* Starting Balance Modal - Shows only once per user */}
-      <StartingBalanceModal
-        isOpen={showStartingBalance}
-        onSubmit={handleSetStartingBalance}
-        loading={authLoading}
-        error={authError}
-      />
-      
-      <main className="px-3 py-3 pt-[72px] pb-20">
-        {renderContent()}
-      </main>
 
-      <BottomNav 
-        activeTab={activeTab} 
-        onTabChange={setActiveTab}
-        onAddClick={handleAddClick}
-        onProfileClick={() => setActiveTab('profile')}
-      />
+        {/* Starting Balance Modal - Shows only once per user */}
+        <StartingBalanceModal
+          isOpen={!!currentUser && (currentUser.startingBalance === null || currentUser.startingBalance === undefined)}
+          onSubmit={handleSetStartingBalance}
+          loading={authLoading}
+          error={authError}
+        />
 
-      {/* Auto-Import Popup */}
-      <AutoImportPopup
-        transaction={pendingTransaction}
-        show={showImportPopup}
-        onImport={async () => {
-          const success = await importTransaction();
-          if (success) {
-            // Could show success notification here
-            console.log('Transaction imported successfully!');
-          }
-        }}
-        onDecline={declineImport}
-      />
+        <main className="px-3 py-3 pt-[72px] pb-20">
+          {renderContent()}
+        </main>
 
-      {/* Add Transaction Modal */}
-      <Modal
-        isOpen={showAddModal}
-        onClose={() => {
-          setShowAddModal(false);
-          setAddMethod(null);
-        }}
-        title={addMethod ? (addMethod === 'sms' ? 'Import from SMS' : addMethod === 'sms-batch' ? 'Batch Import SMS' : addMethod === 'receipt' ? 'Scan Receipt' : 'Add Transaction') : 'Add Transaction'}
-        size="md"
-      >
-        {!addMethod ? (
-          <div className="space-y-3">
-            <p className="text-gray-800 mb-4">Choose how you'd like to add your transaction:</p>
-            
-            <button
-              onClick={() => setAddMethod('sms')}
-              className="w-full p-6 bg-gradient-to-br from-ocean-50 to-ocean-100 hover:from-ocean-100 hover:to-ocean-200 border-2 border-orange-200 rounded-xl transition-all group"
-            >
-              <div className="flex items-center space-x-4">
-                <div className="bg-orange-600 p-3 rounded-lg group-hover:scale-110 transition-transform">
-                  <MessageSquare size={24} className="text-gray-900" />
-                </div>
-                <div className="text-left">
-                  <h3 className="font-bold text-orange-900 text-base">Import from SMS</h3>
-                  <p className="text-xs text-orange-900 mt-1">
-                    Paste your BML or MIB transaction SMS
-                  </p>
-                </div>
-              </div>
-            </button>
+        <BottomNav
+          activeTab={activeTab}
+          onTabChange={setActiveTab}
+          onAddClick={handleAddClick}
+          onProfileClick={() => setActiveTab('profile')}
+        />
 
-            <button
-              onClick={handleImportFromClipboard}
-              className="w-full p-6 bg-gradient-to-br from-green-50 to-green-100 hover:from-green-100 hover:to-green-200 border-2 border-green-200 rounded-xl transition-all group"
-            >
-              <div className="flex items-center space-x-4">
-                <div className="bg-green-600 p-3 rounded-lg group-hover:scale-110 transition-transform">
-                  <MessageSquare size={24} className="text-gray-900" />
-                </div>
-                <div className="text-left">
-                  <h3 className="font-bold text-emerald-500 text-base">Import from Clipboard</h3>
-                  <p className="text-xs text-emerald-500 mt-1">
-                    Copy an SMS, then tap to auto-parse
-                  </p>
-                </div>
-              </div>
-            </button>
+        {/* Quick Add Floating Widget */}
+        <QuickAddWidget />
 
-            <button
-              onClick={() => setAddMethod('receipt')}
-              className="w-full p-6 bg-gradient-to-br from-purple-50 to-purple-100 hover:from-purple-100 hover:to-purple-200 border-2 border-purple-200 rounded-xl transition-all group"
-            >
-              <div className="flex items-center space-x-4">
-                <div className="bg-purple-600 p-3 rounded-lg group-hover:scale-110 transition-transform">
-                  <Camera size={24} className="text-gray-900" />
-                </div>
-                <div className="text-left">
-                  <h3 className="font-bold text-purple-900 text-base">Scan Receipt</h3>
-                  <p className="text-xs text-purple-700 mt-1">
-                    Offline OCR from a photo
-                  </p>
-                </div>
-              </div>
-            </button>
+        {/* Auto-Import Popup */}
+        <AutoImportPopup
+          transaction={pendingTransaction}
+          show={showImportPopup}
+          onImport={async () => {
+            const success = await importTransaction();
+            if (success) {
+              // Could show success notification here
+              console.log('Transaction imported successfully!');
+            }
+          }}
+          onDecline={declineImport}
+        />
 
-            <button
-              onClick={() => setAddMethod('manual')}
-              className="w-full p-6 bg-gradient-to-br from-gray-50 to-gray-100 hover:from-gray-100 hover:to-gray-200 border-2 border-gray-200 rounded-xl transition-all group"
-            >
-              <div className="flex items-center space-x-4">
-                <div className="bg-gray-600 p-3 rounded-lg group-hover:scale-110 transition-transform">
-                  <FileText size={24} className="text-gray-900" />
+        {/* Add Transaction Modal */}
+        <Modal
+          isOpen={showAddModal}
+          onClose={() => {
+            setShowAddModal(false);
+            setAddMethod(null);
+          }}
+          title={addMethod ? (addMethod === 'sms' ? 'Import from SMS' : addMethod === 'sms-batch' ? 'Batch Import SMS' : addMethod === 'receipt' ? 'Scan Receipt' : 'Add Transaction') : 'Add Transaction'}
+          size="md"
+        >
+          {!addMethod ? (
+            <div className="space-y-3">
+              <p className="text-gray-800 mb-4">Choose how you'd like to add your transaction:</p>
+
+              <button
+                onClick={() => setAddMethod('sms')}
+                className="w-full p-6 bg-gradient-to-br from-ocean-50 to-ocean-100 hover:from-ocean-100 hover:to-ocean-200 border-2 border-orange-200 rounded-xl transition-all group"
+              >
+                <div className="flex items-center space-x-4">
+                  <div className="bg-orange-600 p-3 rounded-lg group-hover:scale-110 transition-transform">
+                    <MessageSquare size={24} className="text-gray-900" />
+                  </div>
+                  <div className="text-left">
+                    <h3 className="font-bold text-orange-900 text-base">Import from SMS</h3>
+                    <p className="text-xs text-orange-900 mt-1">
+                      Paste your BML or MIB transaction SMS
+                    </p>
+                  </div>
                 </div>
-                <div className="text-left">
-                  <h3 className="font-bold text-gray-900 text-base">Manual Entry</h3>
-                  <p className="text-xs text-gray-700 mt-1">
-                    Enter transaction details manually
-                  </p>
+              </button>
+
+              <button
+                onClick={handleImportFromClipboard}
+                className="w-full p-6 bg-gradient-to-br from-green-50 to-green-100 hover:from-green-100 hover:to-green-200 border-2 border-green-200 rounded-xl transition-all group"
+              >
+                <div className="flex items-center space-x-4">
+                  <div className="bg-green-600 p-3 rounded-lg group-hover:scale-110 transition-transform">
+                    <MessageSquare size={24} className="text-gray-900" />
+                  </div>
+                  <div className="text-left">
+                    <h3 className="font-bold text-emerald-500 text-base">Import from Clipboard</h3>
+                    <p className="text-xs text-emerald-500 mt-1">
+                      Copy an SMS, then tap to auto-parse
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </button>
-          </div>
-        ) : addMethod === 'sms' ? (
-          <SMSImport 
-            onImport={handleSMSImport}
-            onCancel={() => {
-              setAddMethod(null);
-              setInitialSmsText('');
-              setBatchSmsText('');
-            }}
-            initialText={initialSmsText}
-            autoParse={!!initialSmsText}
-          />
-        ) : addMethod === 'sms-batch' ? (
-          <SMSBatchImport
-            text={batchSmsText}
-            onCancel={() => {
-              setAddMethod(null);
-              setBatchSmsText('');
-            }}
-            onImportMany={async (parsedList) => {
-              // Import sequentially to reuse existing addTransaction flow
-              for (const t of parsedList) {
-                await addTransaction(t);
-              }
-              setShowAddModal(false);
-              setAddMethod(null);
-              setBatchSmsText('');
-            }}
-          />
-        ) : addMethod === 'receipt' ? (
-          <ReceiptScan
-            onImport={async (tx) => {
-              await addTransaction(tx);
-              setShowAddModal(false);
-              setAddMethod(null);
-            }}
-            onCancel={() => setAddMethod(null)}
-          />
-        ) : (
-          <TransactionForm
-            onSuccess={handleManualAdd}
-            onCancel={() => {
-              setAddMethod(null);
-              setPreselectedType(null);
-            }}
-            preselectedType={preselectedType}
-          />
-        )}
-      </Modal>
+              </button>
+
+              <button
+                onClick={() => setAddMethod('receipt')}
+                className="w-full p-6 bg-gradient-to-br from-purple-50 to-purple-100 hover:from-purple-100 hover:to-purple-200 border-2 border-purple-200 rounded-xl transition-all group"
+              >
+                <div className="flex items-center space-x-4">
+                  <div className="bg-purple-600 p-3 rounded-lg group-hover:scale-110 transition-transform">
+                    <Camera size={24} className="text-gray-900" />
+                  </div>
+                  <div className="text-left">
+                    <h3 className="font-bold text-purple-900 text-base">Scan Receipt</h3>
+                    <p className="text-xs text-purple-700 mt-1">
+                      Offline OCR from a photo
+                    </p>
+                  </div>
+                </div>
+              </button>
+
+              <button
+                onClick={() => setAddMethod('manual')}
+                className="w-full p-6 bg-gradient-to-br from-gray-50 to-gray-100 hover:from-gray-100 hover:to-gray-200 border-2 border-gray-200 rounded-xl transition-all group"
+              >
+                <div className="flex items-center space-x-4">
+                  <div className="bg-gray-600 p-3 rounded-lg group-hover:scale-110 transition-transform">
+                    <FileText size={24} className="text-gray-900" />
+                  </div>
+                  <div className="text-left">
+                    <h3 className="font-bold text-gray-900 text-base">Manual Entry</h3>
+                    <p className="text-xs text-gray-700 mt-1">
+                      Enter transaction details manually
+                    </p>
+                  </div>
+                </div>
+              </button>
+            </div>
+          ) : addMethod === 'sms' ? (
+            <SMSImport
+              onImport={handleSMSImport}
+              onCancel={() => {
+                setAddMethod(null);
+                setInitialSmsText('');
+                setBatchSmsText('');
+              }}
+              initialText={initialSmsText}
+              autoParse={!!initialSmsText}
+            />
+          ) : addMethod === 'sms-batch' ? (
+            <SMSBatchImport
+              text={batchSmsText}
+              onCancel={() => {
+                setAddMethod(null);
+                setBatchSmsText('');
+              }}
+              onImportMany={async (parsedList) => {
+                // Import sequentially to reuse existing addTransaction flow
+                for (const t of parsedList) {
+                  await addTransaction(t);
+                }
+                setShowAddModal(false);
+                setAddMethod(null);
+                setBatchSmsText('');
+              }}
+            />
+          ) : addMethod === 'receipt' ? (
+            <ReceiptScan
+              onImport={async (tx) => {
+                await addTransaction(tx);
+                setShowAddModal(false);
+                setAddMethod(null);
+              }}
+              onCancel={() => setAddMethod(null)}
+            />
+          ) : (
+            <TransactionForm
+              onSuccess={handleManualAdd}
+              onCancel={() => {
+                setAddMethod(null);
+                setPreselectedType(null);
+              }}
+              preselectedType={preselectedType}
+            />
+          )}
+        </Modal>
       </div>
     </ThemeProvider>
   );

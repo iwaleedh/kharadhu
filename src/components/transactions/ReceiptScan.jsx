@@ -72,7 +72,7 @@ const extractMerchant = (text) => {
 
 const extractDate = (text) => {
   // Try common formats: dd/MM/yyyy, dd-MM-yyyy, yyyy-MM-dd
-  const m = text.match(/(\d{2}[\/\-]\d{2}[\/\-]\d{4})/);
+  const m = text.match(/(\d{2}[/-]\d{2}[/-]\d{4})/);
   if (!m) return null;
   const s = m[1];
   // dd/MM/yyyy
@@ -85,7 +85,7 @@ const extractDate = (text) => {
 const extractTotal = (text) => {
   // Look for TOTAL like: TOTAL 110.00 or TOTAL: MVR 110.00
   const candidates = [];
-  const re = /(TOTAL|AMOUNT|GRAND\s*TOTAL)\s*[:\-]?\s*(?:MVR\s*)?([0-9]+(?:[\.,][0-9]{2})?)/gi;
+  const re = /(TOTAL|AMOUNT|GRAND\s*TOTAL)\s*[:-]?\s*(?:MVR\s*)?([0-9]+(?:[.,][0-9]{2})?)/gi;
   let match;
   while ((match = re.exec(text)) !== null) {
     const raw = match[2].replace(',', '.');
@@ -95,7 +95,7 @@ const extractTotal = (text) => {
 
   // If no explicit TOTAL found, pick largest money-like number
   if (candidates.length === 0) {
-    const nums = (text.match(/(?:MVR\s*)?([0-9]+(?:[\.,][0-9]{2}))/gi) || [])
+    const nums = (text.match(/(?:MVR\s*)?([0-9]+(?:[.,][0-9]{2}))/gi) || [])
       .map((s) => s.replace(/MVR\s*/i, '').replace(',', '.'))
       .map((s) => Number(s))
       .filter((n) => Number.isFinite(n));

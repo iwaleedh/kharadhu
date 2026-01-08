@@ -11,7 +11,7 @@ import { EditAccountModal } from './EditAccountModal';
 import { ConfirmDialog } from '../ui/ConfirmDialog';
 import { cn } from '../../lib/utils';
 
-export const AccountManager = ({ onAccountSelect, selectedAccountId }) => {
+export const AccountManager = ({ selectedAccountId }) => {
   const [accounts, setAccounts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showAddModal, setShowAddModal] = useState(false);
