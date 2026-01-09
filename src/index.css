@@ -36,56 +36,48 @@
   font-display: swap;
 }
 
+/* ========================================
+   TELEGRAM-STYLE THEME
+   ======================================== */
+
 @theme {
-  /* Dark theme colors */
-  --color-dark-bg: #0a0a0a;
-  --color-dark-surface: #141414;
-  --color-dark-card: #1a1a1a;
-  --color-dark-elevated: #1f1f1f;
+  /* Telegram Dark Theme Colors */
+  --color-telegram-bg: #17212B;
+  --color-telegram-surface: #1F2936;
+  --color-telegram-card: #242F3D;
+  --color-telegram-elevated: #2B3845;
+  --color-telegram-border: #3D4D5C;
 
-  /* Red theme for expenses */
-  --color-red-50: #1a0a0a;
-  --color-red-100: #2d0f0f;
-  --color-red-200: #4a1414;
-  --color-red-300: #7a1e1e;
-  --color-red-400: #b32828;
-  --color-red-500: #dc2626;
-  --color-red-600: #ef4444;
-  --color-red-700: #f87171;
-  --color-red-800: #fca5a5;
-  --color-red-900: #fee2e2;
+  /* Telegram Accent Blue */
+  --color-telegram-blue: #2AABEE;
+  --color-telegram-blue-hover: #3BB5F0;
+  --color-telegram-blue-dark: #1E96D1;
 
-  /* Green theme for income */
-  --color-green-50: #0a1a0a;
-  --color-green-100: #0f2d0f;
-  --color-green-200: #144a14;
-  --color-green-300: #1e7a1e;
-  --color-green-400: #16a34a;
-  --color-green-500: #22c55e;
-  --color-green-600: #4ade80;
-  --color-green-700: #86efac;
-  --color-green-800: #bbf7d0;
-  --color-green-900: #dcfce7;
+  /* Text Colors */
+  --color-text-primary: #FFFFFF;
+  --color-text-secondary: #8B9DA8;
+  --color-text-muted: #6B7C85;
 
-  /* Keep some ocean colors for branding */
-  --color-ocean-600: #0066CC;
-  --color-ocean-700: #1d4ed8;
+  /* Status Colors */
+  --color-telegram-green: #4CAF50;
+  --color-telegram-red: #FF5252;
+  --color-telegram-orange: #FF9800;
+  --color-telegram-purple: #AB47BC;
 }
 
 @layer base {
   * {
     -webkit-tap-highlight-color: transparent;
-    transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
   }
 
-  /* Dark theme only - deep charcoal with subtle red tint */
+  /* Telegram-style dark theme */
   body {
-    background: linear-gradient(135deg, #0a0a0a 0%, #1a0f0f 100%);
-    color: #ffffff;
+    background-color: #17212B;
+    color: #FFFFFF;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     touch-action: manipulation;
-    font-family: system-ui, -apple-system, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
     min-height: 100vh;
   }
 
@@ -94,218 +86,237 @@
   select,
   button {
     font-size: 16px;
-    /* Prevents zoom on iOS */
   }
 }
 
 @layer components {
 
-  /* Dark theme - always active */
+  /* Header/Nav - Telegram style */
   header,
   nav {
-    background: rgba(23, 23, 23, 0.9);
-    border-color: #404040;
+    background: #17212B;
+    border-color: #3D4D5C;
     -webkit-backdrop-filter: blur(12px);
     backdrop-filter: blur(12px);
   }
 
-  /* Dark card styling (default for main app) */
+  /* Card - Telegram bubble style */
   .card {
-    background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%);
-    border: 1px solid #404040;
-    border-radius: 0.75rem;
+    background: #242F3D;
+    border: none;
+    border-radius: 12px;
     padding: 1rem;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   }
 
   .card:hover {
-    border-color: #525252;
+    background: #2B3845;
   }
 
-  /* Force white text in dark cards - NO GREY */
+  /* All text in cards should be white */
   .card * {
-    color: #ffffff !important;
+    color: #FFFFFF !important;
   }
 
-  /* Light card for login/auth pages - override with dark text */
-  .card-light,
-  .bg-white {
-    background: #ffffff !important;
+  /* Secondary text in cards */
+  .card .text-secondary,
+  .card .text-muted {
+    color: #8B9DA8 !important;
   }
 
-  .card-light *,
-  .bg-white * {
-    color: #1e3a5f !important;
-    /* Dark blue text */
-  }
-
-  /* Preserve specific color classes in light cards */
-  .card-light .text-orange-600,
-  .bg-white .text-orange-600 {
-    color: #ea580c !important;
-  }
-
-  .card-light .text-red-600,
-  .bg-white .text-red-600 {
-    color: #dc2626 !important;
-  }
-
-  .card-light .text-blue-700,
-  .card-light .text-blue-800,
-  .card-light .text-blue-900,
-  .bg-white .text-blue-700,
-  .bg-white .text-blue-800,
-  .bg-white .text-blue-900 {
-    color: inherit !important;
-  }
-
-  /* Preserve color classes */
-  .card .text-red-500,
-  .card .text-red-600,
-  .card .text-red-700 {
-    color: #ef4444 !important;
-  }
-
+  /* Preserve accent colors */
   .card .text-green-500,
   .card .text-green-600,
-  .card .text-green-700,
   .card .text-emerald-500,
   .card .text-emerald-600 {
-    color: #22c55e !important;
+    color: #4CAF50 !important;
+  }
+
+  .card .text-red-500,
+  .card .text-red-600 {
+    color: #FF5252 !important;
   }
 
   .card .text-blue-500,
   .card .text-blue-600,
-  .card .text-blue-700 {
-    color: #3b82f6 !important;
+  .card .text-telegram-blue {
+    color: #2AABEE !important;
   }
 
   .card .text-orange-500,
-  .card .text-orange-600,
-  .card .text-orange-700 {
-    color: #f97316 !important;
+  .card .text-orange-600 {
+    color: #FF9800 !important;
   }
 
   .card .text-purple-500,
-  .card .text-purple-600,
-  .card .text-purple-700 {
-    color: #a855f7 !important;
+  .card .text-purple-600 {
+    color: #AB47BC !important;
   }
 
-  .card .text-yellow-500,
-  .card .text-yellow-600 {
-    color: #eab308 !important;
+  /* Light card variant for login/modals */
+  .card-light {
+    background: #FFFFFF;
+    border-radius: 12px;
   }
 
-  .card .text-indigo-500,
-  .card .text-indigo-600 {
-    color: #6366f1 !important;
+  .card-light * {
+    color: #17212B !important;
   }
 
-  .card .text-pink-500,
-  .card .text-pink-600 {
-    color: #ec4899 !important;
+  .card-light .text-secondary {
+    color: #6B7C85 !important;
   }
 
-  .card .text-cyan-500,
-  .card .text-cyan-600 {
-    color: #06b6d4 !important;
+  .card-light .text-telegram-blue,
+  .card-light .text-blue-600 {
+    color: #2AABEE !important;
   }
 
+  .card-light .text-red-600 {
+    color: #FF5252 !important;
+  }
+
+  /* Primary Button - Telegram Blue */
   .btn-primary {
-    background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%);
-    color: #ffffff;
+    background: #2AABEE;
+    color: #FFFFFF;
     font-weight: 600;
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    transition: all 0.3s;
+    padding: 0.75rem 1.25rem;
+    border-radius: 8px;
+    border: none;
+    transition: all 0.2s ease;
   }
 
   .btn-primary:hover {
-    box-shadow: 0 10px 15px -3px rgba(239, 68, 68, 0.5);
+    background: #3BB5F0;
   }
 
   .btn-primary:active {
-    transform: scale(0.95);
+    background: #1E96D1;
+    transform: scale(0.98);
   }
 
+  .btn-primary:disabled {
+    background: #3D4D5C;
+    color: #6B7C85;
+    cursor: not-allowed;
+  }
+
+  /* Secondary Button */
   .btn-secondary {
-    background: #262626;
-    color: #ffffff;
-    font-weight: 600;
-    padding: 0.5rem 1rem;
-    border-radius: 0.5rem;
-    border: 1px solid #404040;
-    transition: all 0.3s;
+    background: #2B3845;
+    color: #FFFFFF;
+    font-weight: 500;
+    padding: 0.75rem 1.25rem;
+    border-radius: 8px;
+    border: 1px solid #3D4D5C;
+    transition: all 0.2s ease;
   }
 
   .btn-secondary:hover {
-    background: #404040;
+    background: #3D4D5C;
   }
 
   .btn-secondary:active {
-    background: #525252;
+    background: #242F3D;
   }
 
+  /* Success Button - Green */
+  .btn-success {
+    background: #4CAF50;
+    color: #FFFFFF;
+    font-weight: 600;
+    padding: 0.75rem 1.25rem;
+    border-radius: 8px;
+    border: none;
+    transition: all 0.2s ease;
+  }
+
+  .btn-success:hover {
+    background: #5CBF60;
+  }
+
+  /* Danger Button - Red */
+  .btn-danger {
+    background: #FF5252;
+    color: #FFFFFF;
+    font-weight: 600;
+    padding: 0.75rem 1.25rem;
+    border-radius: 8px;
+    border: none;
+    transition: all 0.2s ease;
+  }
+
+  .btn-danger:hover {
+    background: #FF6B6B;
+  }
+
+  /* Inputs - Telegram style */
   input,
   textarea,
   select {
-    background: #262626;
-    border: 1px solid #404040;
-    color: #ffffff;
-    border-radius: 0.5rem;
+    background: #242F3D;
+    border: 1px solid #3D4D5C;
+    color: #FFFFFF;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    transition: border-color 0.2s ease;
+  }
+
+  input:focus,
+  textarea:focus,
+  select:focus {
+    outline: none;
+    border-color: #2AABEE;
+    box-shadow: 0 0 0 2px rgba(42, 171, 238, 0.2);
   }
 
   input::placeholder,
   textarea::placeholder {
-    color: #a3a3a3;
+    color: #6B7C85;
   }
 
+  /* Stat card - Telegram blue accent */
   .stat-card {
-    background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
-    color: #ffffff;
-    border-radius: 0.75rem;
+    background: linear-gradient(135deg, #2AABEE 0%, #1E96D1 100%);
+    color: #FFFFFF;
+    border-radius: 12px;
     padding: 1.5rem;
-    box-shadow: 0 25px 50px -12px rgba(153, 27, 27, 0.5);
+    box-shadow: 0 4px 12px rgba(42, 171, 238, 0.3);
   }
 
-  .stat-card:hover {
-    box-shadow: 0 25px 50px -12px rgba(153, 27, 27, 0.6);
-  }
-
-  .safe-area-bottom {
-    padding-bottom: env(safe-area-inset-bottom);
-  }
-
-  /* Override ALL grey text to white - NO GREY ALLOWED */
+  /* Override grey text globally - use Telegram secondary color */
   .text-gray-100,
   .text-gray-200,
-  .text-gray-300,
+  .text-gray-300 {
+    color: #FFFFFF !important;
+  }
+
   .text-gray-400,
   .text-gray-500,
   .text-gray-600,
   .text-gray-700,
   .text-gray-800,
   .text-gray-900 {
-    color: #ffffff !important;
+    color: #8B9DA8 !important;
   }
 
-  /* Slightly dimmed for truly secondary text */
-  .text-muted {
-    color: #d4d4d4 !important;
+  /* Safe area */
+  .safe-area-bottom {
+    padding-bottom: env(safe-area-inset-bottom);
   }
 
-  /* Smooth animations */
+  /* Animations */
   .fade-in {
-    animation: fadeIn 0.4s ease-in;
+    animation: fadeIn 0.3s ease-in;
   }
 
   .slide-up {
-    animation: slideUp 0.4s ease-out;
+    animation: slideUp 0.3s ease-out;
   }
 
   .scale-in {
-    animation: scaleIn 0.3s ease-out;
+    animation: scaleIn 0.2s ease-out;
   }
 
   @keyframes fadeIn {
@@ -376,5 +387,34 @@
 
   .shake-x {
     animation: shakeX 240ms ease-in-out;
+  }
+
+  /* Telegram colors as utilities */
+  .bg-telegram {
+    background-color: #17212B;
+  }
+
+  .bg-telegram-surface {
+    background-color: #1F2936;
+  }
+
+  .bg-telegram-card {
+    background-color: #242F3D;
+  }
+
+  .bg-telegram-blue {
+    background-color: #2AABEE;
+  }
+
+  .text-telegram-blue {
+    color: #2AABEE;
+  }
+
+  .text-telegram-secondary {
+    color: #8B9DA8;
+  }
+
+  .border-telegram {
+    border-color: #3D4D5C;
   }
 }

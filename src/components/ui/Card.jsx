@@ -4,10 +4,11 @@ export const Card = ({ children, className, hover = false, ...props }) => {
   return (
     <div
       className={cn(
-        'bg-white rounded-xl shadow-sm border border-gray-200 p-4',
-        hover && 'hover:shadow-md hover:border-orange-200 transition-all duration-200',
+        'bg-telegram-card rounded-xl border-none p-4',
+        hover && 'hover:bg-telegram-elevated transition-all duration-200',
         className
       )}
+      style={{ backgroundColor: '#242F3D' }}
       {...props}
     >
       {children}
@@ -25,7 +26,7 @@ export const CardHeader = ({ children, className }) => {
 
 export const CardTitle = ({ children, className }) => {
   return (
-    <h3 className={cn('text-xl font-bold text-gray-900', className)}>
+    <h3 className={cn('text-xl font-bold text-white', className)}>
       {children}
     </h3>
   );

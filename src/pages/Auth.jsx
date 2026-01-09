@@ -38,19 +38,24 @@ export const Auth = () => {
   const canSignUp = useMemo(() => name.trim() && pin2.trim().length >= 4, [name, pin2]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center px-4 py-10 bg-gradient-to-br from-blue-50 to-blue-100">
-      <div className="w-full max-w-md space-y-4">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold text-blue-900">Kharadhu</h1>
-          <p className="text-sm text-blue-700">Expense Tracker</p>
+    <div className="min-h-screen flex items-center justify-center px-4 py-10 bg-telegram">
+      <div className="w-full max-w-md space-y-6">
+        {/* Logo/Title - Telegram style */}
+        <div className="text-center space-y-2">
+          <div className="w-20 h-20 mx-auto bg-telegram-blue rounded-full flex items-center justify-center mb-4">
+            <span className="text-4xl">💰</span>
+          </div>
+          <h1 className="text-2xl font-bold text-white">Kharadhu</h1>
+          <p className="text-telegram-secondary">Personal Expense Tracker</p>
         </div>
 
-        <Card className="card-light">
+        {/* Login Card - Telegram style */}
+        <Card className="bg-telegram-card border-none">
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle>{mode === 'signin' ? 'Sign In' : 'Create Account'}</CardTitle>
+              <CardTitle className="text-white">{mode === 'signin' ? 'Sign In' : 'Create Account'}</CardTitle>
               <button
-                className="text-sm text-orange-600 hover:underline"
+                className="text-sm text-telegram-blue hover:underline font-medium"
                 onClick={() => {
                   setMode(mode === 'signin' ? 'signup' : 'signin');
                   setPin('');
@@ -58,13 +63,13 @@ export const Auth = () => {
                   setName('');
                 }}
               >
-                {mode === 'signin' ? 'Create' : 'Sign In'}
+                {mode === 'signin' ? 'Create Account' : 'Sign In'}
               </button>
             </div>
           </CardHeader>
-          <CardContent className="space-y-3">
+          <CardContent className="space-y-4">
             {error ? (
-              <div className="text-sm text-red-600 bg-red-50 border border-red-200 p-2 rounded">
+              <div className="text-sm text-white bg-red-500/20 border border-red-500/50 p-3 rounded-lg">
                 Wrong username or password
               </div>
             ) : null}
@@ -91,36 +96,42 @@ export const Auth = () => {
                     return ok;
                   }}
                 />
-                <label className="text-sm text-blue-800">Account</label>
-                <select
-                  value={selectedUserId}
-                  onChange={(e) => {
-                    setSelectedUserId(e.target.value);
-                    setPin('');
-                  }}
-                  autoComplete="off"
-                  className="w-full px-3 py-2 bg-white border border-blue-300 rounded-lg text-blue-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-300"
-                >
-                  <option value="">Select an account</option>
-                  {users.map((u) => (
-                    <option key={u.id} value={u.id}>
-                      {u.name}
-                    </option>
-                  ))}
-                </select>
 
-                <label className="text-sm text-blue-800">PIN</label>
-                <Input
-                  type="password"
-                  inputMode="numeric"
-                  placeholder="4+ digits"
-                  value={pin}
-                  onChange={(e) => setPin(e.target.value)}
-                  autoComplete="new-password"
-                />
+                <div className="space-y-2">
+                  <label className="text-sm text-telegram-secondary">Account</label>
+                  <select
+                    value={selectedUserId}
+                    onChange={(e) => {
+                      setSelectedUserId(e.target.value);
+                      setPin('');
+                    }}
+                    autoComplete="off"
+                    className="w-full px-4 py-3 bg-telegram-surface border border-telegram rounded-lg text-white focus:border-telegram-blue transition-colors"
+                  >
+                    <option value="">Select an account</option>
+                    {users.map((u) => (
+                      <option key={u.id} value={u.id}>
+                        {u.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div className="space-y-2">
+                  <label className="text-sm text-telegram-secondary">PIN</label>
+                  <Input
+                    type="password"
+                    inputMode="numeric"
+                    placeholder="Enter your 4+ digit PIN"
+                    value={pin}
+                    onChange={(e) => setPin(e.target.value)}
+                    autoComplete="new-password"
+                    className="bg-telegram-surface border-telegram text-white placeholder-telegram-secondary"
+                  />
+                </div>
 
                 <Button
-                  className="w-full"
+                  className="w-full bg-telegram-blue hover:bg-telegram-blue-hover text-white py-3"
                   disabled={!canSignIn || loading}
                   onClick={() => signIn({ userId: selectedUserId, pin })}
                 >
@@ -128,7 +139,7 @@ export const Auth = () => {
                 </Button>
 
                 <button
-                  className="text-sm text-orange-600 hover:underline text-left"
+                  className="text-sm text-telegram-blue hover:underline"
                   disabled={!selectedUserId}
                   onClick={() => setShowForgot(true)}
                 >
@@ -136,25 +147,35 @@ export const Auth = () => {
                 </button>
 
                 {users.length === 0 ? (
-                  <p className="text-sm text-blue-700">No accounts yet — create one.</p>
+                  <p className="text-sm text-telegram-secondary text-center">No accounts yet — create one above.</p>
                 ) : null}
               </>
             ) : (
               <>
-                <label className="text-sm text-blue-800">Name</label>
-                <Input placeholder="e.g., Ibrahim" value={name} onChange={(e) => setName(e.target.value)} />
+                <div className="space-y-2">
+                  <label className="text-sm text-telegram-secondary">Your Name</label>
+                  <Input
+                    placeholder="e.g., Ibrahim"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="bg-telegram-surface border-telegram text-white placeholder-telegram-secondary"
+                  />
+                </div>
 
-                <label className="text-sm text-blue-800">New PIN</label>
-                <Input
-                  type="password"
-                  inputMode="numeric"
-                  placeholder="4+ digits"
-                  value={pin2}
-                  onChange={(e) => setPin2(e.target.value)}
-                />
+                <div className="space-y-2">
+                  <label className="text-sm text-telegram-secondary">Create PIN</label>
+                  <Input
+                    type="password"
+                    inputMode="numeric"
+                    placeholder="4+ digits"
+                    value={pin2}
+                    onChange={(e) => setPin2(e.target.value)}
+                    className="bg-telegram-surface border-telegram text-white placeholder-telegram-secondary"
+                  />
+                </div>
 
                 <Button
-                  className="w-full"
+                  className="w-full bg-telegram-blue hover:bg-telegram-blue-hover text-white py-3"
                   disabled={!canSignUp || loading}
                   onClick={() => signUp({ name, pin: pin2 })}
                 >
@@ -165,8 +186,8 @@ export const Auth = () => {
           </CardContent>
         </Card>
 
-        <p className="text-xs text-blue-700 text-center">
-          Accounts are stored locally on this device.
+        <p className="text-xs text-telegram-secondary text-center">
+          All data is stored locally on your device
         </p>
       </div>
     </div>
