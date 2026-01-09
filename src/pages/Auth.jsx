@@ -70,7 +70,7 @@ export const Auth = () => {
           <CardContent className="space-y-4">
             {error ? (
               <div className="text-sm text-white bg-red-500/20 border border-red-500/50 p-3 rounded-lg">
-                Wrong username or password
+                {mode === 'signin' ? 'Wrong username or password' : error}
               </div>
             ) : null}
 
