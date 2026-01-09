@@ -51,7 +51,12 @@ export const Auth = () => {
               <CardTitle>{mode === 'signin' ? 'Sign In' : 'Create Account'}</CardTitle>
               <button
                 className="text-sm text-orange-600 hover:underline"
-                onClick={() => setMode(mode === 'signin' ? 'signup' : 'signin')}
+                onClick={() => {
+                  setMode(mode === 'signin' ? 'signup' : 'signin');
+                  setPin('');
+                  setPin2('');
+                  setName('');
+                }}
               >
                 {mode === 'signin' ? 'Create' : 'Sign In'}
               </button>
@@ -59,8 +64,8 @@ export const Auth = () => {
           </CardHeader>
           <CardContent className="space-y-3">
             {error ? (
-              <div className="text-sm text-red-600 bg-coral-50 border border-coral-200 p-2 rounded">
-                {error}
+              <div className="text-sm text-red-600 bg-red-50 border border-red-200 p-2 rounded">
+                Wrong username or password
               </div>
             ) : null}
 
@@ -89,7 +94,11 @@ export const Auth = () => {
                 <label className="text-sm text-gray-800">Account</label>
                 <select
                   value={selectedUserId}
-                  onChange={(e) => setSelectedUserId(e.target.value)}
+                  onChange={(e) => {
+                    setSelectedUserId(e.target.value);
+                    setPin('');
+                  }}
+                  autoComplete="off"
                   className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-300"
                 >
                   <option value="">Select an account</option>
@@ -107,6 +116,7 @@ export const Auth = () => {
                   placeholder="4+ digits"
                   value={pin}
                   onChange={(e) => setPin(e.target.value)}
+                  autoComplete="new-password"
                 />
 
                 <Button
