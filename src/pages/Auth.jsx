@@ -42,7 +42,7 @@ export const Auth = () => {
       <div className="w-full max-w-md space-y-4">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-blue-900">Kharadhu</h1>
-          <p className="text-sm text-gray-700">Expense Tracker</p>
+          <p className="text-sm text-blue-700">Expense Tracker</p>
         </div>
 
         <Card>
@@ -91,7 +91,7 @@ export const Auth = () => {
                     return ok;
                   }}
                 />
-                <label className="text-sm text-gray-800">Account</label>
+                <label className="text-sm text-blue-800">Account</label>
                 <select
                   value={selectedUserId}
                   onChange={(e) => {
@@ -99,7 +99,7 @@ export const Auth = () => {
                     setPin('');
                   }}
                   autoComplete="off"
-                  className="w-full px-3 py-2 bg-white border border-gray-300 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-300"
+                  className="w-full px-3 py-2 bg-white border border-blue-300 rounded-lg text-blue-900 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all duration-300"
                 >
                   <option value="">Select an account</option>
                   {users.map((u) => (
@@ -109,7 +109,7 @@ export const Auth = () => {
                   ))}
                 </select>
 
-                <label className="text-sm text-gray-800">PIN</label>
+                <label className="text-sm text-blue-800">PIN</label>
                 <Input
                   type="password"
                   inputMode="numeric"
@@ -136,15 +136,15 @@ export const Auth = () => {
                 </button>
 
                 {users.length === 0 ? (
-                  <p className="text-sm text-gray-700">No accounts yet — create one.</p>
+                  <p className="text-sm text-blue-700">No accounts yet — create one.</p>
                 ) : null}
               </>
             ) : (
               <>
-                <label className="text-sm text-gray-800">Name</label>
+                <label className="text-sm text-blue-800">Name</label>
                 <Input placeholder="e.g., Ibrahim" value={name} onChange={(e) => setName(e.target.value)} />
 
-                <label className="text-sm text-gray-800">New PIN</label>
+                <label className="text-sm text-blue-800">New PIN</label>
                 <Input
                   type="password"
                   inputMode="numeric"
@@ -165,7 +165,7 @@ export const Auth = () => {
           </CardContent>
         </Card>
 
-        <p className="text-xs text-gray-700 text-center">
+        <p className="text-xs text-blue-700 text-center">
           Accounts are stored locally on this device.
         </p>
       </div>
