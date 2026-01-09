@@ -109,6 +109,7 @@
     backdrop-filter: blur(12px);
   }
 
+  /* Dark card styling (default for main app) */
   .card {
     background: linear-gradient(135deg, #1a1a1a 0%, #262626 100%);
     border: 1px solid #404040;
@@ -121,9 +122,41 @@
     border-color: #525252;
   }
 
-  /* Force white/light text in cards - NO GREY */
+  /* Force white text in dark cards - NO GREY */
   .card * {
     color: #ffffff !important;
+  }
+
+  /* Light card for login/auth pages - override with dark text */
+  .card-light,
+  .bg-white {
+    background: #ffffff !important;
+  }
+
+  .card-light *,
+  .bg-white * {
+    color: #1e3a5f !important;
+    /* Dark blue text */
+  }
+
+  /* Preserve specific color classes in light cards */
+  .card-light .text-orange-600,
+  .bg-white .text-orange-600 {
+    color: #ea580c !important;
+  }
+
+  .card-light .text-red-600,
+  .bg-white .text-red-600 {
+    color: #dc2626 !important;
+  }
+
+  .card-light .text-blue-700,
+  .card-light .text-blue-800,
+  .card-light .text-blue-900,
+  .bg-white .text-blue-700,
+  .bg-white .text-blue-800,
+  .bg-white .text-blue-900 {
+    color: inherit !important;
   }
 
   /* Preserve color classes */

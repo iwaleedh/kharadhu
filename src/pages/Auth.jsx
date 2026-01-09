@@ -45,7 +45,7 @@ export const Auth = () => {
           <p className="text-sm text-blue-700">Expense Tracker</p>
         </div>
 
-        <Card>
+        <Card className="card-light">
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle>{mode === 'signin' ? 'Sign In' : 'Create Account'}</CardTitle>
