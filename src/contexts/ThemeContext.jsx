@@ -1,41 +1,20 @@
-import { useEffect, useMemo, useState } from 'react';
-import { getCurrentUserId, storageKey } from './themeStorage';
+import { useEffect, useState } from 'react';
 import { ThemeContext } from './themeContextState';
 
 export const ThemeProvider = ({ children }) => {
-  const [theme, setTheme] = useState(() => {
-    // Initialize from storage synchronously (avoids setState-in-effect).
-    const userId = getCurrentUserId();
-    const saved = localStorage.getItem(storageKey(userId));
-    return saved || 'system';
-  }); // 'dark' | 'light' | 'system'
+  // Always dark theme - no more light/system options
+  const [theme] = useState('dark');
+  const [resolvedTheme] = useState('dark');
 
-  const [resolvedTheme, setResolvedTheme] = useState('dark');
-
-  const media = useMemo(() => window.matchMedia('(prefers-color-scheme: dark)'), []);
-
-  // Listen to system changes when on system mode
+  // Apply dark theme on mount
   useEffect(() => {
-    const update = () => {
-      const prefersDark = media.matches;
-      const finalTheme = theme === 'system' ? (prefersDark ? 'dark' : 'light') : theme;
-      setResolvedTheme(finalTheme);
+    const root = document.documentElement;
+    root.classList.remove('theme-light');
+    root.classList.add('theme-dark');
+  }, []);
 
-      const root = document.documentElement;
-      root.classList.remove('theme-dark', 'theme-light');
-      root.classList.add(finalTheme === 'dark' ? 'theme-dark' : 'theme-light');
-    };
-
-    update();
-    media.addEventListener('change', update);
-    return () => media.removeEventListener('change', update);
-  }, [media, theme]);
-
-  // Persist theme per user
-  useEffect(() => {
-    const userId = getCurrentUserId();
-    localStorage.setItem(storageKey(userId), theme);
-  }, [theme]);
+  // No-op setTheme since we're always dark
+  const setTheme = () => { };
 
   return (
     <ThemeContext.Provider value={{ theme, resolvedTheme, setTheme }}>
@@ -43,4 +22,3 @@ export const ThemeProvider = ({ children }) => {
     </ThemeContext.Provider>
   );
 };
-

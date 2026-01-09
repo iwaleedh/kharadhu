@@ -9,7 +9,6 @@ import { exportLegacyDatabase } from '../lib/legacyExport';
 import { importLegacyBackupJsonFile } from '../lib/legacyImport';
 import { previewLegacyBackupJsonFile } from '../lib/legacyPreview';
 import { getCurrentUserId } from '../lib/currentUser';
-import { ThemePreference } from '../components/settings/ThemePreference';
 import { getSecuritySettings, updateSecuritySettings } from '../lib/securitySettings';
 import { ConfirmDialog } from '../components/ui/ConfirmDialog';
 import { CategoryManager } from '../components/categories/CategoryManager';
@@ -244,16 +243,6 @@ export const Settings = () => {
               <span className="text-base font-semibold text-gray-900">Local (IndexedDB)</span>
             </div>
           </div>
-        </CardContent>
-      </Card>
-
-      {/* Theme Preference */}
-      <Card>
-        <CardHeader>
-          <CardTitle>Theme Preference</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ThemePreference />
         </CardContent>
       </Card>
 
