@@ -60,7 +60,8 @@ import { Card, CardHeader, CardTitle, CardContent } from '../ui/Card';
 import { getAccounts, getCategories } from '../../lib/database';
 import { getCurrentUserId } from '../../lib/currentUser';
 import { formatCurrency } from '../../lib/utils';
-import { Trash2, Plus, Edit2, Check, X } from 'lucide-react';
+import { Trash2, Plus, Edit2, Check, X, Sparkles } from 'lucide-react';
+import { isGeminiConfigured, extractReceiptWithGemini } from '../../lib/geminiOcr';
 
 // Heuristic OCR parsing for Maldives receipts
 const extractMerchant = (text) => {
@@ -219,6 +220,10 @@ export const ReceiptScan = ({ onImport, onCancel }) => {
   const [viewMode, setViewMode] = useState('single'); // 'single' or 'items'
   const [savingItems, setSavingItems] = useState(false);
 
+  // Gemini AI OCR state
+  const [useGemini, setUseGemini] = useState(() => isGeminiConfigured());
+  const geminiAvailable = isGeminiConfigured();
+
   useEffect(() => {
     const load = async () => {
       const uid = Number(getCurrentUserId());
@@ -256,48 +261,97 @@ export const ReceiptScan = ({ onImport, onCancel }) => {
     }
     setBusy(true);
     setProgress(0);
+
     try {
-      // Preprocess image for better OCR
-      const processed = await preprocessImage(file);
+      let text = '';
+      let extractedData = null;
 
-      const result = await Tesseract.recognize(processed, 'eng', {
-        logger: (m) => {
-          if (m.status === 'recognizing text' && typeof m.progress === 'number') {
-            setProgress(Math.round(m.progress * 100));
+      // Use Gemini if available and selected
+      if (useGemini && geminiAvailable) {
+        setProgress(30);
+        try {
+          extractedData = await extractReceiptWithGemini(file);
+          setProgress(100);
+          text = extractedData.rawText || '';
+          setOcrText(text);
+          setConfidence(95); // Gemini typically has high accuracy
+
+          // Apply Gemini extracted data
+          if (extractedData.merchant) setMerchant(extractedData.merchant);
+          if (extractedData.date) {
+            // Convert date string to ISO
+            const parsed = new Date(extractedData.date);
+            if (!isNaN(parsed.getTime())) {
+              setDate(parsed.toISOString());
+            }
           }
-        },
-      });
-      const text = result?.data?.text || '';
-      setOcrText(text);
-      if (typeof result?.data?.confidence === 'number') {
-        setConfidence(result.data.confidence);
-      }
+          if (extractedData.total && extractedData.total > 0) {
+            setAmount(String(extractedData.total));
+          }
 
-      // Heuristic extraction for single transaction
-      const m = extractMerchant(text);
-      const d = extractDate(text);
-      const t = extractTotal(text);
+          // Handle parsed items from Gemini
+          if (extractedData.items && extractedData.items.length > 0) {
+            const categorizedItems = extractedData.items.map((item, idx) => ({
+              id: Date.now() + idx,
+              name: item.name,
+              price: item.price,
+              quantity: item.quantity || 1,
+              category: autoCategorize(item.name, categories),
+            }));
+            setParsedItems(categorizedItems);
 
-      if (m) setMerchant(m);
-      if (d) setDate(d);
-      if (t !== null) setAmount(String(t));
+            if (categorizedItems.length > 1) {
+              setViewMode('items');
+            }
+          }
 
-      // Suggest category if Transfer detected
-      if (/transfer/i.test(text) && !category) setCategory('Transfer');
+        } catch (geminiError) {
+          console.error('Gemini OCR failed:', geminiError);
+          setError(`Gemini OCR failed: ${geminiError.message}. Try local OCR instead.`);
+          setBusy(false);
+          return;
+        }
+      } else {
+        // Fallback to Tesseract.js
+        const processed = await preprocessImage(file);
 
-      // NEW: Extract line items
-      const items = extractLineItems(text);
-      if (items.length > 0) {
-        // Auto-categorize each item
-        const categorizedItems = items.map(item => ({
-          ...item,
-          category: autoCategorize(item.name, categories),
-        }));
-        setParsedItems(categorizedItems);
+        const result = await Tesseract.recognize(processed, 'eng', {
+          logger: (m) => {
+            if (m.status === 'recognizing text' && typeof m.progress === 'number') {
+              setProgress(Math.round(m.progress * 100));
+            }
+          },
+        });
+        text = result?.data?.text || '';
+        setOcrText(text);
+        if (typeof result?.data?.confidence === 'number') {
+          setConfidence(result.data.confidence);
+        }
 
-        // If multiple items found, suggest items view
-        if (items.length > 1) {
-          setViewMode('items');
+        // Heuristic extraction for single transaction
+        const m = extractMerchant(text);
+        const d = extractDate(text);
+        const t = extractTotal(text);
+
+        if (m) setMerchant(m);
+        if (d) setDate(d);
+        if (t !== null) setAmount(String(t));
+
+        // Suggest category if Transfer detected
+        if (/transfer/i.test(text) && !category) setCategory('Transfer');
+
+        // Extract line items with Tesseract
+        const items = extractLineItems(text);
+        if (items.length > 0) {
+          const categorizedItems = items.map(item => ({
+            ...item,
+            category: autoCategorize(item.name, categories),
+          }));
+          setParsedItems(categorizedItems);
+
+          if (items.length > 1) {
+            setViewMode('items');
+          }
         }
       }
 
@@ -427,16 +481,38 @@ export const ReceiptScan = ({ onImport, onCancel }) => {
     <div className="space-y-3">
       <Card>
         <CardHeader>
-          <CardTitle className="text-sm">Scan Receipt (Offline OCR)</CardTitle>
+          <div className="flex items-center justify-between">
+            <CardTitle className="text-sm flex items-center gap-2">
+              {geminiAvailable && useGemini && <Sparkles size={16} className="text-blue-400" />}
+              Scan Receipt
+            </CardTitle>
+            {geminiAvailable && (
+              <button
+                onClick={() => setUseGemini(!useGemini)}
+                className={`text-xs px-3 py-1 rounded-full transition-all ${useGemini
+                    ? 'bg-blue-500/20 text-blue-400 border border-blue-500/50'
+                    : 'bg-slate-700 text-slate-400 border border-slate-600'
+                  }`}
+              >
+                {useGemini ? '✨ AI Mode' : '📷 Local OCR'}
+              </button>
+            )}
+          </div>
+          {geminiAvailable && useGemini && (
+            <p className="text-xs text-slate-400 mt-1">Using Gemini AI for multilingual receipts</p>
+          )}
+          {!geminiAvailable && (
+            <p className="text-xs text-slate-500 mt-1">Add Gemini API key in Settings for better OCR</p>
+          )}
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
             {error ? (
-              <div className="text-sm text-red-900 bg-red-950/30 border border-red-200/50 p-3 rounded-lg">{error}</div>
+              <div className="text-sm text-red-400 bg-red-500/10 border border-red-500/30 p-3 rounded-lg">{error}</div>
             ) : null}
 
             <div>
-              <p className="text-xs text-gray-700 mb-2">Choose a clear receipt photo</p>
+              <p className="text-xs text-slate-400 mb-2">Choose a clear receipt photo</p>
               <Input
                 type="file"
                 accept="image/*"
@@ -483,8 +559,8 @@ export const ReceiptScan = ({ onImport, onCancel }) => {
           <button
             onClick={() => setViewMode('single')}
             className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-colors ${viewMode === 'single'
-                ? 'bg-white text-gray-900 shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
+              ? 'bg-white text-gray-900 shadow-sm'
+              : 'text-gray-600 hover:text-gray-900'
               }`}
           >
             Single Transaction
@@ -492,8 +568,8 @@ export const ReceiptScan = ({ onImport, onCancel }) => {
           <button
             onClick={() => setViewMode('items')}
             className={`flex-1 py-2 px-3 rounded-md text-sm font-medium transition-colors ${viewMode === 'items'
-                ? 'bg-white text-gray-900 shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
+              ? 'bg-white text-gray-900 shadow-sm'
+              : 'text-gray-600 hover:text-gray-900'
               }`}
           >
             Item List ({parsedItems.length})

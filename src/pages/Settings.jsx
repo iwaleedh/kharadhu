@@ -17,6 +17,7 @@ import { ReminderManager } from '../components/reminders/ReminderManager';
 import { RecurringManager } from '../components/recurring/RecurringManager';
 import { CurrencyConverter } from '../components/tools/CurrencyConverter';
 import { DataBackup } from '../components/settings/DataBackup';
+import { GeminiApiSettings } from '../components/settings/GeminiApiSettings';
 import { useEffect, useState } from 'react';
 
 export const Settings = () => {
@@ -210,6 +211,9 @@ export const Settings = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* AI Receipt Scanner (Gemini) */}
+      <GeminiApiSettings />
 
       {/* Category Management */}
       <CategoryManager />
