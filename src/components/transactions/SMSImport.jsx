@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { MessageSquare, CheckCircle, AlertCircle } from 'lucide-react';
+import { MessageSquare, CheckCircle, AlertCircle, Sparkles } from 'lucide-react';
 import { Button } from '../ui/Button';
 import { TextArea, Input } from '../ui/Input';
 import { Card, CardHeader, CardTitle, CardContent } from '../ui/Card';
@@ -7,6 +7,7 @@ import { parseSMS } from '../../lib/smsParser';
 import { formatCurrency } from '../../lib/utils';
 import { getAccounts, getCategories } from '../../lib/database';
 import { getCurrentUserId } from '../../lib/currentUser';
+import { isGeminiConfigured, parseSmsWithGemini } from '../../lib/geminiOcr';
 
 export const SMSImport = ({ onImport, onCancel, initialText = '', autoParse = false }) => {
   const [smsText, setSmsText] = useState('');
@@ -16,6 +17,11 @@ export const SMSImport = ({ onImport, onCancel, initialText = '', autoParse = fa
   const [accounts, setAccounts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('');
+
+  // Gemini AI state
+  const [useGemini, setUseGemini] = useState(() => isGeminiConfigured());
+  const geminiAvailable = isGeminiConfigured();
+  const [aiParsing, setAiParsing] = useState(false);
 
   // Load user accounts and categories
   useEffect(() => {
@@ -38,7 +44,7 @@ export const SMSImport = ({ onImport, onCancel, initialText = '', autoParse = fa
     }
   }, [initialText]);
 
-  const handleParse = () => {
+  const handleParse = async () => {
     setError('');
     setParsedData(null);
 
@@ -47,46 +53,93 @@ export const SMSImport = ({ onImport, onCancel, initialText = '', autoParse = fa
       return;
     }
 
-    try {
-      const result = parseSMS(smsText);
+    let result = null;
 
-      // Try to find matching account
-      let accountId = null;
-      if (result.accountNumber && result.bank) {
+    // Try Gemini AI if available and selected
+    if (useGemini && geminiAvailable) {
+      setAiParsing(true);
+      try {
+        const aiResult = await parseSmsWithGemini(smsText);
+        result = {
+          type: aiResult.type,
+          amount: aiResult.amount,
+          merchant: aiResult.merchant,
+          date: aiResult.date ? new Date(aiResult.date).toISOString() : new Date().toISOString(),
+          balance: aiResult.balance,
+          bank: aiResult.bank,
+          accountNumber: aiResult.accountNumber,
+          referenceNumber: aiResult.reference,
+          category: aiResult.category,
+          rawText: smsText,
+        };
+      } catch (aiError) {
+        console.error('Gemini AI parse failed:', aiError);
+        setError(`AI parsing failed: ${aiError.message}. Trying local parser...`);
+        // Fall back to local parser
+        try {
+          result = parseSMS(smsText);
+        } catch (err) {
+          setError(err.message);
+          setAiParsing(false);
+          return;
+        }
+      }
+      setAiParsing(false);
+    } else {
+      // Use local regex parser
+      try {
+        result = parseSMS(smsText);
+      } catch (err) {
+        setError(err.message);
+        return;
+      }
+    }
+
+    // Try to find matching account
+    let accountId = null;
+    if (result.bank) {
+      // Try by account number first
+      if (result.accountNumber) {
         const matchingAccount = accounts.find(
-          acc => acc.accountNumber === result.accountNumber && acc.bankName === result.bank
+          acc => acc.accountNumber?.endsWith(result.accountNumber) ||
+            acc.accountNumber === result.accountNumber
         );
         if (matchingAccount) {
           accountId = matchingAccount.id;
-        } else {
-          // Try to find by bank name only
-          const bankAccount = accounts.find(acc => acc.bankName === result.bank);
-          if (bankAccount) {
-            accountId = bankAccount.id;
-          } else if (accounts.length > 0) {
-            // Use primary account or first account as fallback
-            const primaryAccount = accounts.find(acc => acc.isPrimary) || accounts[0];
-            accountId = primaryAccount.id;
-          }
         }
       }
 
-      // Add accountId to parsed data
-      setParsedData({ ...result, accountId });
-
-      // Set initial category from parsed data
-      setSelectedCategory(result.category || '');
-
-      // Show warning if no account matched
-      if (!accountId && accounts.length > 0) {
-        setError('Warning: Could not match account. Using default account.');
-      } else if (accounts.length === 0) {
-        setError('Error: No accounts found. Please create an account first.');
-        setParsedData(null);
-        return;
+      // Try by bank name
+      if (!accountId) {
+        const bankAccount = accounts.find(acc =>
+          acc.bankName?.toLowerCase().includes(result.bank.toLowerCase()) ||
+          result.bank.toLowerCase().includes(acc.bankName?.toLowerCase())
+        );
+        if (bankAccount) {
+          accountId = bankAccount.id;
+        }
       }
-    } catch (err) {
-      setError(err.message);
+    }
+
+    // Fallback to primary/first account
+    if (!accountId && accounts.length > 0) {
+      const primaryAccount = accounts.find(acc => acc.isPrimary) || accounts[0];
+      accountId = primaryAccount.id;
+    }
+
+    // Add accountId to parsed data
+    setParsedData({ ...result, accountId });
+
+    // Set initial category from parsed data
+    setSelectedCategory(result.category || '');
+
+    // Show warning if no account matched
+    if (!accountId && accounts.length > 0) {
+      setError('Warning: Could not match account. Using default account.');
+    } else if (accounts.length === 0) {
+      setError('Error: No accounts found. Please create an account first.');
+      setParsedData(null);
+      return;
     }
   };
 
@@ -205,19 +258,47 @@ export const SMSImport = ({ onImport, onCancel, initialText = '', autoParse = fa
     <div className="space-y-3">
       <Card className="p-3">
         <CardHeader className="mb-3">
-          <div className="flex items-center space-x-2">
-            <MessageSquare className="text-orange-600" size={20} />
-            <CardTitle className="text-base">Import from SMS</CardTitle>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2">
+              {geminiAvailable && useGemini ? (
+                <Sparkles className="text-blue-400" size={20} />
+              ) : (
+                <MessageSquare className="text-blue-400" size={20} />
+              )}
+              <CardTitle className="text-base">Import from SMS</CardTitle>
+            </div>
+            {geminiAvailable && (
+              <button
+                onClick={() => setUseGemini(!useGemini)}
+                className={`text-xs px-3 py-1 rounded-full transition-all ${useGemini
+                    ? 'bg-blue-500/20 text-blue-400 border border-blue-500/50'
+                    : 'bg-slate-700 text-slate-400 border border-slate-600'
+                  }`}
+              >
+                {useGemini ? '✨ AI Mode' : '📝 Local'}
+              </button>
+            )}
           </div>
-          <p className="text-xs text-gray-800 mt-2">
-            Copy and paste your BML or MIB transaction SMS below
+          <p className="text-xs text-slate-400 mt-2">
+            {geminiAvailable && useGemini
+              ? 'Paste any bank SMS in any language - AI will extract transaction details'
+              : 'Paste BML or MIB transaction SMS below'
+            }
           </p>
+          {!geminiAvailable && (
+            <p className="text-xs text-slate-500 mt-1">
+              Add Gemini API key in Settings for multilingual SMS support
+            </p>
+          )}
         </CardHeader>
         <CardContent className="p-0">
           <TextArea
             value={smsText}
             onChange={(e) => setSmsText(e.target.value)}
-            placeholder="Example: BML: Your account ending 1234 has been debited MVR 250.00 at FOODCO on 02-Jan-26. Balance: MVR 5,750.00"
+            placeholder={useGemini && geminiAvailable
+              ? "Paste any bank SMS in any language..."
+              : "Example: BML: Your account ending 1234 has been debited MVR 250.00 at FOODCO on 02-Jan-26. Balance: MVR 5,750.00"
+            }
             rows={4}
             error={error}
             className="text-sm"
@@ -227,10 +308,10 @@ export const SMSImport = ({ onImport, onCancel, initialText = '', autoParse = fa
             <Button
               variant="primary"
               onClick={handleParse}
-              disabled={!smsText.trim()}
+              disabled={!smsText.trim() || aiParsing}
               className="flex-1 text-sm"
             >
-              Parse SMS
+              {aiParsing ? 'AI Analyzing...' : (useGemini && geminiAvailable ? '✨ Parse with AI' : 'Parse SMS')}
             </Button>
             {onCancel && (
               <Button variant="secondary" onClick={onCancel} className="text-sm">

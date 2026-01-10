@@ -198,3 +198,135 @@ export const testGeminiApiKey = async (apiKey) => {
         return { valid: false, error: error.message };
     }
 };
+
+/**
+ * Parse SMS transaction using Gemini AI
+ * Supports multilingual SMS (Dhivehi, Arabic, English) from various banks
+ * @param {string} smsText - The SMS text to parse
+ * @returns {Promise<{type: string, amount: number, merchant: string, date: string, balance: number, bank: string, accountNumber: string, rawText: string}>}
+ */
+export const parseSmsWithGemini = async (smsText) => {
+    const apiKey = getGeminiApiKey();
+
+    if (!apiKey) {
+        throw new Error('Gemini API key not configured. Please add your API key in Settings.');
+    }
+
+    try {
+        const response = await fetch(`${GEMINI_API_URL}?key=${apiKey}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                contents: [{
+                    parts: [{
+                        text: `Parse this bank SMS message and extract transaction details. The SMS may be in English, Dhivehi (Thaana script), or Arabic. Common banks include BML (Bank of Maldives), MIB (Maldives Islamic Bank), HDFC, and others.
+
+SMS Text:
+"""
+${smsText}
+"""
+
+Extract the following information and return as JSON:
+{
+  "type": "debit" or "credit" (debit for purchases/withdrawals/payments, credit for deposits/transfers received),
+  "amount": 123.45 (just the number, no currency symbol),
+  "merchant": "Store or description" (who/what the transaction was for),
+  "date": "YYYY-MM-DD" (if found, otherwise today's date),
+  "time": "HH:MM" (if found, otherwise null),
+  "balance": 456.78 (remaining balance if mentioned, otherwise null),
+  "bank": "Bank name" (BML, MIB, HDFC, etc.),
+  "accountNumber": "last 4 digits if found" (e.g., "1234"),
+  "cardNumber": "last 4 digits of card if mentioned" (e.g., "5678"),
+  "reference": "reference number if any",
+  "category": "suggested category" (Food & Dining, Shopping, Transfer, ATM, etc.)
+}
+
+Rules:
+- "Purchase", "Spent", "Paid", "Debited", "Withdrawn" = type "debit"
+- "Received", "Credited", "Deposited", "Transfer In" = type "credit"
+- MVR is Maldivian Rufiyaa currency
+- Look for patterns like "MVR 100.00" or "Rf.100" or just numbers near transaction keywords
+- Always try to extract the amount, this is the most important field`
+                    }]
+                }],
+                generationConfig: {
+                    temperature: 0.1,
+                    topK: 1,
+                    topP: 1,
+                    maxOutputTokens: 1024,
+                }
+            })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            if (response.status === 400) {
+                throw new Error('Invalid API key or request.');
+            }
+            if (response.status === 429) {
+                throw new Error('API rate limit exceeded. Please try again later.');
+            }
+            throw new Error(errorData.error?.message || `API error: ${response.status}`);
+        }
+
+        const data = await response.json();
+        const textResponse = data.candidates?.[0]?.content?.parts?.[0]?.text;
+
+        if (!textResponse) {
+            throw new Error('No response from Gemini API');
+        }
+
+        // Parse JSON from response
+        let jsonMatch = textResponse.match(/```json\s*([\s\S]*?)\s*```/);
+        let jsonStr = jsonMatch ? jsonMatch[1] : textResponse;
+
+        if (!jsonMatch) {
+            jsonMatch = textResponse.match(/\{[\s\S]*\}/);
+            jsonStr = jsonMatch ? jsonMatch[0] : textResponse;
+        }
+
+        try {
+            const result = JSON.parse(jsonStr);
+            return {
+                type: result.type === 'credit' ? 'credit' : 'debit',
+                amount: typeof result.amount === 'number' ? result.amount : parseFloat(result.amount) || 0,
+                merchant: result.merchant || '',
+                date: result.date || new Date().toISOString().split('T')[0],
+                time: result.time || null,
+                balance: result.balance ? parseFloat(result.balance) : null,
+                bank: result.bank || '',
+                accountNumber: result.accountNumber || '',
+                cardNumber: result.cardNumber || '',
+                reference: result.reference || '',
+                category: result.category || (result.type === 'credit' ? 'Income' : 'Other'),
+                rawText: smsText
+            };
+        } catch {
+            throw new Error('Failed to parse SMS. Please check the message format.');
+        }
+
+    } catch (error) {
+        console.error('Gemini SMS parse error:', error);
+        throw error;
+    }
+};
+
+/**
+ * Parse multiple SMS messages in batch
+ * @param {string[]} smsMessages - Array of SMS texts
+ * @returns {Promise<Array>}
+ */
+export const parseSmsArrayWithGemini = async (smsMessages) => {
+    const results = [];
+    for (const sms of smsMessages) {
+        try {
+            const parsed = await parseSmsWithGemini(sms);
+            results.push({ success: true, data: parsed });
+        } catch (error) {
+            results.push({ success: false, error: error.message, rawText: sms });
+        }
+    }
+    return results;
+};
