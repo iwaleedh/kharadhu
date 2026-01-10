@@ -6,6 +6,7 @@ import { Transactions } from './pages/Transactions';
 import { Reports } from './pages/Reports';
 import { Settings } from './pages/Settings';
 import { Profile } from './pages/Profile';
+import { Admin } from './pages/Admin';
 import { Modal } from './components/ui/Modal';
 import { SMSImport } from './components/transactions/SMSImport';
 import { TransactionForm } from './components/transactions/TransactionForm';
@@ -14,14 +15,12 @@ import { SMSBatchImport } from './components/transactions/SMSBatchImport';
 import { AutoImportPopup } from './components/AutoImportPopup';
 import { useTransactionStore } from './store/transactionStore';
 import { useAutoImport } from './hooks/useAutoImport';
-import { FileText, MessageSquare, Camera } from 'lucide-react';
+import { FileText, MessageSquare, Camera, Shield } from 'lucide-react';
 import { Button } from './components/ui/Button';
 
 import { ThemeProvider } from './contexts/ThemeContext';
-import { Auth } from './pages/Auth';
-import { useAuthStore } from './store/authStore';
-import { StartingBalanceModal } from './components/auth/StartingBalanceModal';
-import { getSecuritySettings } from './lib/securitySettings';
+import { FirebaseAuth } from './pages/FirebaseAuth';
+import { useFirebaseAuthStore } from './store/firebaseAuthStore';
 import { QuickAddWidget } from './components/widgets/QuickAddWidget';
 
 function App() {
@@ -32,34 +31,16 @@ function App() {
   const [initialSmsText, setInitialSmsText] = useState('');
   const [batchSmsText, setBatchSmsText] = useState('');
   const { init, addTransaction } = useTransactionStore();
-  const { currentUserId, currentUser, setStartingBalance, signOut, loading: authLoading, error: authError, init: initAuth } = useAuthStore();
-  // Inactivity lock (auto sign-out)
-  useEffect(() => {
-    const { idleTimeoutMinutes } = getSecuritySettings();
-    if (!currentUserId || !idleTimeoutMinutes || idleTimeoutMinutes <= 0) return;
-
-    let timerId;
-    const resetTimer = () => {
-      if (timerId) clearTimeout(timerId);
-      timerId = setTimeout(() => {
-        signOut();
-      }, idleTimeoutMinutes * 60 * 1000);
-    };
-
-    const activityEvents = ['mousemove', 'keydown', 'touchstart'];
-    activityEvents.forEach((ev) => window.addEventListener(ev, resetTimer));
-    document.addEventListener('visibilitychange', () => {
-      if (document.visibilityState === 'visible') resetTimer();
-    });
-
-    resetTimer();
-
-    return () => {
-      if (timerId) clearTimeout(timerId);
-      activityEvents.forEach((ev) => window.removeEventListener(ev, resetTimer));
-      document.removeEventListener('visibilitychange', resetTimer);
-    };
-  }, [currentUserId, signOut]);
+  const {
+    user,
+    isAdmin,
+    loading: authLoading,
+    initialized,
+    init: initAuth,
+    signOut,
+    getCurrentUserId,
+    getDisplayName
+  } = useFirebaseAuthStore();
 
   // Auto-import hook
   const {
@@ -69,14 +50,20 @@ function App() {
     declineImport,
   } = useAutoImport();
 
+  // Initialize Firebase auth listener
   useEffect(() => {
-    initAuth();
+    const unsubscribe = initAuth();
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
   }, [initAuth]);
 
   useEffect(() => {
     // Re-load user-scoped data when account changes.
-    init();
-  }, [init, currentUserId]);
+    if (user) {
+      init();
+    }
+  }, [init, user]);
 
   const handleAddClick = () => {
     setShowAddModal(true);
@@ -157,34 +144,44 @@ function App() {
         return <Settings />;
       case 'profile':
         return <Profile />;
+      case 'admin':
+        return <Admin />;
       default:
         return <Dashboard />;
     }
   };
 
-  if (!currentUserId) {
+  // Show loading state
+  if (!initialized || authLoading) {
     return (
       <ThemeProvider>
-        <Auth />
+        <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: '#0F172A' }}>
+          <div className="text-center">
+            <div className="animate-spin w-12 h-12 border-4 border-blue-500 border-t-transparent rounded-full mx-auto"></div>
+            <p className="text-slate-400 mt-4">Loading...</p>
+          </div>
+        </div>
       </ThemeProvider>
     );
   }
 
-  const handleSetStartingBalance = async (balance, accountNumber) => {
-    await setStartingBalance({ userId: currentUserId, balance, accountNumber });
-  };
+  // Show auth if not logged in
+  if (!user) {
+    return (
+      <ThemeProvider>
+        <FirebaseAuth />
+      </ThemeProvider>
+    );
+  }
 
   return (
     <ThemeProvider>
       <div className="min-h-screen">
-        <Header />
-
-        {/* Starting Balance Modal - Shows only once per user */}
-        <StartingBalanceModal
-          isOpen={!!currentUser && (currentUser.startingBalance === null || currentUser.startingBalance === undefined)}
-          onSubmit={handleSetStartingBalance}
-          loading={authLoading}
-          error={authError}
+        <Header
+          showAdmin={isAdmin}
+          onAdminClick={() => setActiveTab('admin')}
+          onSignOut={signOut}
+          displayName={getDisplayName()}
         />
 
         <main className="px-3 py-3 pt-[72px] pb-20">
@@ -196,6 +193,7 @@ function App() {
           onTabChange={setActiveTab}
           onAddClick={handleAddClick}
           onProfileClick={() => setActiveTab('profile')}
+          isAdmin={isAdmin}
         />
 
         {/* Quick Add Floating Widget */}
@@ -208,7 +206,6 @@ function App() {
           onImport={async () => {
             const success = await importTransaction();
             if (success) {
-              // Could show success notification here
               console.log('Transaction imported successfully!');
             }
           }}
@@ -227,20 +224,20 @@ function App() {
         >
           {!addMethod ? (
             <div className="space-y-3">
-              <p className="text-gray-800 mb-4">Choose how you'd like to add your transaction:</p>
+              <p className="text-slate-400 mb-4">Choose how you'd like to add your transaction:</p>
 
               <button
                 onClick={() => setAddMethod('sms')}
-                className="w-full p-6 bg-gradient-to-br from-ocean-50 to-ocean-100 hover:from-ocean-100 hover:to-ocean-200 border-2 border-orange-200 rounded-xl transition-all group"
+                className="w-full p-6 bg-gradient-to-br from-blue-900/50 to-blue-800/50 hover:from-blue-800/50 hover:to-blue-700/50 border-2 border-blue-500/30 rounded-xl transition-all group"
               >
                 <div className="flex items-center space-x-4">
-                  <div className="bg-orange-600 p-3 rounded-lg group-hover:scale-110 transition-transform">
-                    <MessageSquare size={24} className="text-gray-900" />
+                  <div className="bg-blue-500 p-3 rounded-lg group-hover:scale-110 transition-transform">
+                    <MessageSquare size={24} className="text-white" />
                   </div>
                   <div className="text-left">
-                    <h3 className="font-bold text-orange-900 text-base">Import from SMS</h3>
-                    <p className="text-xs text-orange-900 mt-1">
-                      Paste your BML or MIB transaction SMS
+                    <h3 className="font-bold text-white text-base">Import from SMS</h3>
+                    <p className="text-xs text-slate-400 mt-1">
+                      Paste your bank transaction SMS
                     </p>
                   </div>
                 </div>
@@ -248,15 +245,15 @@ function App() {
 
               <button
                 onClick={handleImportFromClipboard}
-                className="w-full p-6 bg-gradient-to-br from-green-50 to-green-100 hover:from-green-100 hover:to-green-200 border-2 border-green-200 rounded-xl transition-all group"
+                className="w-full p-6 bg-gradient-to-br from-green-900/50 to-green-800/50 hover:from-green-800/50 hover:to-green-700/50 border-2 border-green-500/30 rounded-xl transition-all group"
               >
                 <div className="flex items-center space-x-4">
-                  <div className="bg-green-600 p-3 rounded-lg group-hover:scale-110 transition-transform">
-                    <MessageSquare size={24} className="text-gray-900" />
+                  <div className="bg-green-500 p-3 rounded-lg group-hover:scale-110 transition-transform">
+                    <MessageSquare size={24} className="text-white" />
                   </div>
                   <div className="text-left">
-                    <h3 className="font-bold text-emerald-500 text-base">Import from Clipboard</h3>
-                    <p className="text-xs text-emerald-500 mt-1">
+                    <h3 className="font-bold text-white text-base">Import from Clipboard</h3>
+                    <p className="text-xs text-slate-400 mt-1">
                       Copy an SMS, then tap to auto-parse
                     </p>
                   </div>
@@ -265,16 +262,16 @@ function App() {
 
               <button
                 onClick={() => setAddMethod('receipt')}
-                className="w-full p-6 bg-gradient-to-br from-purple-50 to-purple-100 hover:from-purple-100 hover:to-purple-200 border-2 border-purple-200 rounded-xl transition-all group"
+                className="w-full p-6 bg-gradient-to-br from-purple-900/50 to-purple-800/50 hover:from-purple-800/50 hover:to-purple-700/50 border-2 border-purple-500/30 rounded-xl transition-all group"
               >
                 <div className="flex items-center space-x-4">
-                  <div className="bg-purple-600 p-3 rounded-lg group-hover:scale-110 transition-transform">
-                    <Camera size={24} className="text-gray-900" />
+                  <div className="bg-purple-500 p-3 rounded-lg group-hover:scale-110 transition-transform">
+                    <Camera size={24} className="text-white" />
                   </div>
                   <div className="text-left">
-                    <h3 className="font-bold text-purple-900 text-base">Scan Receipt</h3>
-                    <p className="text-xs text-purple-700 mt-1">
-                      Offline OCR from a photo
+                    <h3 className="font-bold text-white text-base">Scan Receipt</h3>
+                    <p className="text-xs text-slate-400 mt-1">
+                      AI-powered or offline OCR
                     </p>
                   </div>
                 </div>
@@ -282,15 +279,15 @@ function App() {
 
               <button
                 onClick={() => setAddMethod('manual')}
-                className="w-full p-6 bg-gradient-to-br from-gray-50 to-gray-100 hover:from-gray-100 hover:to-gray-200 border-2 border-gray-200 rounded-xl transition-all group"
+                className="w-full p-6 bg-gradient-to-br from-slate-800/50 to-slate-700/50 hover:from-slate-700/50 hover:to-slate-600/50 border-2 border-slate-500/30 rounded-xl transition-all group"
               >
                 <div className="flex items-center space-x-4">
-                  <div className="bg-gray-600 p-3 rounded-lg group-hover:scale-110 transition-transform">
-                    <FileText size={24} className="text-gray-900" />
+                  <div className="bg-slate-500 p-3 rounded-lg group-hover:scale-110 transition-transform">
+                    <FileText size={24} className="text-white" />
                   </div>
                   <div className="text-left">
-                    <h3 className="font-bold text-gray-900 text-base">Manual Entry</h3>
-                    <p className="text-xs text-gray-700 mt-1">
+                    <h3 className="font-bold text-white text-base">Manual Entry</h3>
+                    <p className="text-xs text-slate-400 mt-1">
                       Enter transaction details manually
                     </p>
                   </div>

@@ -1,7 +1,6 @@
-import { Waves } from 'lucide-react';
-import { AccountSwitcher } from './AccountSwitcher';
+import { Waves, Shield, LogOut } from 'lucide-react';
 
-export const Header = () => {
+export const Header = ({ showAdmin, onAdminClick, onSignOut, displayName }) => {
   return (
     <header
       className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl border-b shadow-lg"
@@ -31,13 +30,30 @@ export const Header = () => {
                   WebkitTextFillColor: 'transparent'
                 }}
               >
-                Kharadhu
+                Aamdhanee
               </h1>
-              <p className="text-sm text-slate-400">Expense Tracker</p>
+              <p className="text-xs text-slate-400">{displayName || 'Finance Tracker'}</p>
             </div>
           </div>
           <div className="flex items-center space-x-2">
-            <AccountSwitcher />
+            {showAdmin && (
+              <button
+                onClick={onAdminClick}
+                className="p-2 rounded-lg bg-yellow-500/20 text-yellow-400 hover:bg-yellow-500/30 transition-colors"
+                title="Admin Dashboard"
+              >
+                <Shield size={20} />
+              </button>
+            )}
+            {onSignOut && (
+              <button
+                onClick={onSignOut}
+                className="p-2 rounded-lg bg-slate-700 text-slate-300 hover:bg-slate-600 transition-colors"
+                title="Sign Out"
+              >
+                <LogOut size={20} />
+              </button>
+            )}
           </div>
         </div>
       </div>
