@@ -37,32 +37,37 @@
 }
 
 /* ========================================
-   TELEGRAM-STYLE THEME
+   MODERN BLUE THEME - Clean & Minimalistic
    ======================================== */
 
 @theme {
-  /* Telegram Dark Theme Colors */
-  --color-telegram-bg: #17212B;
-  --color-telegram-surface: #1F2936;
-  --color-telegram-card: #242F3D;
-  --color-telegram-elevated: #2B3845;
-  --color-telegram-border: #3D4D5C;
+  /* Background Colors */
+  --color-bg-primary: #0F172A;
+  --color-bg-secondary: #1E293B;
+  --color-bg-card: #1E293B;
+  --color-bg-elevated: #334155;
 
-  /* Telegram Accent Blue */
-  --color-telegram-blue: #2AABEE;
-  --color-telegram-blue-hover: #3BB5F0;
-  --color-telegram-blue-dark: #1E96D1;
+  /* Blue Accent Palette */
+  --color-blue-50: #EFF6FF;
+  --color-blue-100: #DBEAFE;
+  --color-blue-200: #BFDBFE;
+  --color-blue-300: #93C5FD;
+  --color-blue-400: #60A5FA;
+  --color-blue-500: #3B82F6;
+  --color-blue-600: #2563EB;
+  --color-blue-700: #1D4ED8;
 
   /* Text Colors */
-  --color-text-primary: #FFFFFF;
-  --color-text-secondary: #8B9DA8;
-  --color-text-muted: #6B7C85;
+  --color-text-primary: #F8FAFC;
+  --color-text-secondary: #94A3B8;
+  --color-text-muted: #64748B;
 
-  /* Status Colors */
-  --color-telegram-green: #4CAF50;
-  --color-telegram-red: #FF5252;
-  --color-telegram-orange: #FF9800;
-  --color-telegram-purple: #AB47BC;
+  /* Status Colors - Only for values */
+  --color-expense: #EF4444;
+  --color-income: #22C55E;
+
+  /* Border */
+  --color-border: #334155;
 }
 
 @layer base {
@@ -70,14 +75,13 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  /* Telegram-style dark theme */
   body {
-    background-color: #17212B;
-    color: #FFFFFF;
+    background-color: #0F172A;
+    color: #F8FAFC;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     touch-action: manipulation;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     min-height: 100vh;
   }
 
@@ -91,205 +95,183 @@
 
 @layer components {
 
-  /* Header/Nav - Telegram style */
+  /* Header/Nav */
   header,
   nav {
-    background: #17212B;
-    border-color: #3D4D5C;
+    background: rgba(15, 23, 42, 0.95);
+    border-color: #334155;
     -webkit-backdrop-filter: blur(12px);
     backdrop-filter: blur(12px);
   }
 
-  /* Card - Telegram bubble style */
+  /* Card - Clean minimal style */
   .card {
-    background: #242F3D;
-    border: none;
-    border-radius: 12px;
-    padding: 1rem;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-  }
-
-  .card:hover {
-    background: #2B3845;
-  }
-
-  /* All text in cards should be white */
-  .card * {
-    color: #FFFFFF !important;
-  }
-
-  /* Secondary text in cards */
-  .card .text-secondary,
-  .card .text-muted {
-    color: #8B9DA8 !important;
-  }
-
-  /* Preserve accent colors */
-  .card .text-green-500,
-  .card .text-green-600,
-  .card .text-emerald-500,
-  .card .text-emerald-600 {
-    color: #4CAF50 !important;
-  }
-
-  .card .text-red-500,
-  .card .text-red-600 {
-    color: #FF5252 !important;
-  }
-
-  .card .text-blue-500,
-  .card .text-blue-600,
-  .card .text-telegram-blue {
-    color: #2AABEE !important;
-  }
-
-  .card .text-orange-500,
-  .card .text-orange-600 {
-    color: #FF9800 !important;
-  }
-
-  .card .text-purple-500,
-  .card .text-purple-600 {
-    color: #AB47BC !important;
-  }
-
-  /* Light card variant for login/modals */
-  .card-light {
-    background: #FFFFFF;
-    border-radius: 12px;
-  }
-
-  .card-light * {
-    color: #17212B !important;
-  }
-
-  .card-light .text-secondary {
-    color: #6B7C85 !important;
-  }
-
-  .card-light .text-telegram-blue,
-  .card-light .text-blue-600 {
-    color: #2AABEE !important;
-  }
-
-  .card-light .text-red-600 {
-    color: #FF5252 !important;
-  }
-
-  /* Primary Button - Telegram Blue */
-  .btn-primary {
-    background: #2AABEE;
-    color: #FFFFFF;
-    font-weight: 600;
-    padding: 0.75rem 1.25rem;
-    border-radius: 8px;
-    border: none;
+    background: #1E293B;
+    border: 1px solid #334155;
+    border-radius: 16px;
+    padding: 1.25rem;
     transition: all 0.2s ease;
   }
 
+  .card:hover {
+    border-color: #3B82F6;
+  }
+
+  /* White text in cards */
+  .card * {
+    color: #F8FAFC !important;
+  }
+
+  /* Secondary text */
+  .card .text-secondary,
+  .card .text-muted {
+    color: #94A3B8 !important;
+  }
+
+  /* Preserve expense/income colors for values only */
+  .card .text-red-500,
+  .card .text-red-600,
+  .card .expense-value {
+    color: #EF4444 !important;
+  }
+
+  .card .text-green-500,
+  .card .text-green-600,
+  .card .text-emerald-500,
+  .card .text-emerald-600,
+  .card .income-value {
+    color: #22C55E !important;
+  }
+
+  /* Blue accent colors */
+  .card .text-blue-400,
+  .card .text-blue-500,
+  .card .text-blue-600 {
+    color: #60A5FA !important;
+  }
+
+  /* Primary Button - Blue gradient */
+  .btn-primary {
+    background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+    color: #FFFFFF;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    border: none;
+    transition: all 0.2s ease;
+    box-shadow: 0 4px 14px rgba(59, 130, 246, 0.35);
+  }
+
   .btn-primary:hover {
-    background: #3BB5F0;
+    background: linear-gradient(135deg, #60A5FA 0%, #3B82F6 100%);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.45);
+    transform: translateY(-1px);
   }
 
   .btn-primary:active {
-    background: #1E96D1;
-    transform: scale(0.98);
+    transform: translateY(0);
   }
 
   .btn-primary:disabled {
-    background: #3D4D5C;
-    color: #6B7C85;
+    background: #334155;
+    color: #64748B;
     cursor: not-allowed;
+    box-shadow: none;
   }
 
   /* Secondary Button */
   .btn-secondary {
-    background: #2B3845;
-    color: #FFFFFF;
+    background: #334155;
+    color: #F8FAFC;
     font-weight: 500;
-    padding: 0.75rem 1.25rem;
-    border-radius: 8px;
-    border: 1px solid #3D4D5C;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    border: 1px solid #475569;
     transition: all 0.2s ease;
   }
 
   .btn-secondary:hover {
-    background: #3D4D5C;
+    background: #475569;
+    border-color: #60A5FA;
   }
 
-  .btn-secondary:active {
-    background: #242F3D;
-  }
-
-  /* Success Button - Green */
+  /* Success Button - Blue tinted green */
   .btn-success {
-    background: #4CAF50;
+    background: linear-gradient(135deg, #22C55E 0%, #16A34A 100%);
     color: #FFFFFF;
     font-weight: 600;
-    padding: 0.75rem 1.25rem;
-    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
     border: none;
     transition: all 0.2s ease;
   }
 
   .btn-success:hover {
-    background: #5CBF60;
+    background: linear-gradient(135deg, #4ADE80 0%, #22C55E 100%);
   }
 
-  /* Danger Button - Red */
+  /* Danger Button - Only for delete actions */
   .btn-danger {
-    background: #FF5252;
+    background: linear-gradient(135deg, #EF4444 0%, #DC2626 100%);
     color: #FFFFFF;
     font-weight: 600;
-    padding: 0.75rem 1.25rem;
-    border-radius: 8px;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
     border: none;
     transition: all 0.2s ease;
   }
 
   .btn-danger:hover {
-    background: #FF6B6B;
+    background: linear-gradient(135deg, #F87171 0%, #EF4444 100%);
   }
 
-  /* Inputs - Telegram style */
+  /* Inputs */
   input,
   textarea,
   select {
-    background: #242F3D;
-    border: 1px solid #3D4D5C;
-    color: #FFFFFF;
-    border-radius: 8px;
-    padding: 0.75rem 1rem;
-    transition: border-color 0.2s ease;
+    background: #1E293B;
+    border: 1px solid #334155;
+    color: #F8FAFC;
+    border-radius: 12px;
+    padding: 0.875rem 1rem;
+    transition: all 0.2s ease;
   }
 
   input:focus,
   textarea:focus,
   select:focus {
     outline: none;
-    border-color: #2AABEE;
-    box-shadow: 0 0 0 2px rgba(42, 171, 238, 0.2);
+    border-color: #3B82F6;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
   }
 
   input::placeholder,
   textarea::placeholder {
-    color: #6B7C85;
+    color: #64748B;
   }
 
-  /* Stat card - Telegram blue accent */
+  /* Stat card - Blue gradient */
   .stat-card {
-    background: linear-gradient(135deg, #2AABEE 0%, #1E96D1 100%);
+    background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
     color: #FFFFFF;
-    border-radius: 12px;
+    border-radius: 16px;
     padding: 1.5rem;
-    box-shadow: 0 4px 12px rgba(42, 171, 238, 0.3);
+    box-shadow: 0 8px 32px rgba(59, 130, 246, 0.25);
   }
 
-  /* Override grey text globally - use Telegram secondary color */
+  /* Balance card */
+  .balance-card {
+    background: linear-gradient(135deg, #1E293B 0%, #0F172A 100%);
+    border: 1px solid #334155;
+    border-radius: 20px;
+    padding: 1.5rem;
+  }
+
+  /* Override grey text globally */
   .text-gray-100,
   .text-gray-200,
   .text-gray-300 {
-    color: #FFFFFF !important;
+    color: #F8FAFC !important;
   }
 
   .text-gray-400,
@@ -298,12 +280,24 @@
   .text-gray-700,
   .text-gray-800,
   .text-gray-900 {
-    color: #8B9DA8 !important;
+    color: #94A3B8 !important;
   }
 
   /* Safe area */
   .safe-area-bottom {
     padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  /* Navigation active state - Blue */
+  .nav-active {
+    color: #3B82F6 !important;
+    background: rgba(59, 130, 246, 0.1);
+  }
+
+  /* Tab/Toggle - Blue */
+  .tab-active {
+    background: #3B82F6;
+    color: #FFFFFF;
   }
 
   /* Animations */
@@ -389,32 +383,28 @@
     animation: shakeX 240ms ease-in-out;
   }
 
-  /* Telegram colors as utilities */
-  .bg-telegram {
-    background-color: #17212B;
+  /* Blue theme utilities */
+  .bg-theme-primary {
+    background-color: #0F172A;
   }
 
-  .bg-telegram-surface {
-    background-color: #1F2936;
+  .bg-theme-card {
+    background-color: #1E293B;
   }
 
-  .bg-telegram-card {
-    background-color: #242F3D;
+  .bg-theme-blue {
+    background-color: #3B82F6;
   }
 
-  .bg-telegram-blue {
-    background-color: #2AABEE;
+  .text-theme-blue {
+    color: #3B82F6;
   }
 
-  .text-telegram-blue {
-    color: #2AABEE;
+  .text-theme-secondary {
+    color: #94A3B8;
   }
 
-  .text-telegram-secondary {
-    color: #8B9DA8;
-  }
-
-  .border-telegram {
-    border-color: #3D4D5C;
+  .border-theme {
+    border-color: #334155;
   }
 }
